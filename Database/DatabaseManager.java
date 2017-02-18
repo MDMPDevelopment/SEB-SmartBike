@@ -34,7 +34,7 @@ public class DatabaseManager {
 		}
 		//This will build the query
 		String s = "INSERT INTO MeasurementEntities (MeasurementId, Value) " 
-						+ "VALUES (" + MeasurementId + ", " + data + ")";
+						+ "VALUES (" + MeasurementId + ", " + "\"" + data + "\")";
 		//This will execute the query
 		statement.executeUpdate(s);
 	}
@@ -44,6 +44,20 @@ public class DatabaseManager {
 		String query ="EntityId|MeasurementId  |\tValue \t|\tTime\n"; 
 		//Query the MeasurementEntities table
 		resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities");
+		//Build the string
+        while (resultSet.next()) 
+        	query += resultSet.getString("EntityId") + "\t|\t"
+                + resultSet.getString("MeasurementId") + "\t|\t"
+                + resultSet.getString("Value") + "\t|\t"
+                + resultSet.getString("TimeStamp") + "\n";
+		return query;
+	}
+	
+	public String getMeasurmentEntities(String type) throws Exception {
+		
+	String query ="EntityId|MeasurementId  |\tValue \t|\tTime\n"; 
+		//Query the MeasurementEntities table
+		resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities INNER JOIN Measurements ON MeasurementEntities.MeasurementId = Measurements.MeasurementId WHERE MeasurementType == \"" + type + "\"");
 		//Build the string
         while (resultSet.next()) 
         	query += resultSet.getString("EntityId") + "\t|\t"
@@ -82,7 +96,10 @@ public class DatabaseManager {
 			System.out.println("Listing measurment entities:");
 			System.out.println(db.getMeasurmentEntities());
 			//System.out.println("Adding GPS reading...");
-			//db.addMeasurement("GPS", "\"10, -23\"");
+			//db.addMeasurement("Speed", "10");
+			System.out.println("Listing measurment entities of type 'Speed':");
+			System.out.println(db.getMeasurmentEntities("Speed"));
+			
 			db.exit();
 		} catch (Exception e) {
 			e.printStackTrace();
