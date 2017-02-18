@@ -10,69 +10,80 @@ public class DatabaseManager {
     private ResultSet resultSet = null;
     private Statement statement = null;
     
-	private final String DatabasePath = "/home/pi/Desktop/SEB/";
+	private final String DatabasePath = "./";
     private final String DatabaseName = "seb.db";
 	
 	
-	public DatabaseManager() {
-		 try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
-            statement = connection.createStatement();            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		
+	public DatabaseManager() throws Exception {	
+        Class.forName("org.sqlite.JDBC");
+        connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
+        statement = connection.createStatement();            		
 	}
 	
-	public void addMeasurement(String type, String data) {
-		statement = "INSERT INTO MeasurementEntities (ID,NAME,AGE,ADDRESS,SALARY) " +
+	public void addMeasurement(String type, String data)  throws Exception {
+		int MeasurementId = -1;
+		//Set resultSet to all measurement types
+		resultSet = statement.executeQuery("SELECT * FROM Measurements");
+		//Map the type to an ID 
+		while (resultSet.next())
+			if( resultSet.getString("MeasurementType").equals(type))
+				MeasurementId = (int) Integer.parseInt(resultSet.getString("MeasurementId"));
+		//IF we didn't find the type error out
+		if(MeasurementId < 0) {
+			System.out.println("ERROR: type not found: " + resultSet.getString("MeasurementType"));
+			return;
+		}
+		
+		String s = "INSERT INTO MeasurementEntities (MeasurementId, Value) " 
+						+ "VALUES (" + MeasurementId + ", " + data + ")";
+		statement.executeUpdate(s);
 	}
 	
 	/*
-	public String getMeasurmentEntities(){
-		String query ="ID \t|\tType \t|\tUnits \n"; 
-		try {
-		resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities");
-        while (resultSet.next()) 
-        	query += "Id:"
-                + resultSet.getString("MeasurementId") + "\t|\t"
-                + resultSet.getString("") + "\t|\t"
-                + resultSet.getString("MeasurementUnits")+ "\n";
-        } catch (Exception e) {
-			e.printStackTrace();
-		}
-		return query;
-	}
+	*public String getMeasurmentEntities(){
+	*	String query ="ID \t|\tType \t|\tUnits \n"; 
+	*	try {
+	*	resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities");
+    *    while (resultSet.next()) 
+    *    	query += "Id:"
+    *            + resultSet.getString("MeasurementId") + "\t|\t"
+    *            + resultSet.getString("") + "\t|\t"
+    *            + resultSet.getString("MeasurementUnits")+ "\n";
+    *    } catch (Exception e) {
+	*		e.printStackTrace();
+	*	}
+	*	return query;
+	*}
 	*/
-	public String getMeasurmentTypes(){
-		String query ="ID \t|\tType \t|\tUnits \n"; 
-		try {
+	
+	public String getMeasurmentTypes()  throws Exception {
+		String query ="ID \t|\tType \t|\tUnits \t|\t Time\n"; 
 		resultSet = statement.executeQuery("SELECT * FROM Measurements");
         while (resultSet.next()) 
-        	query += "Id:"
-                + resultSet.getString("MeasurementId") + "\t|\t"
+        	query += resultSet.getString("MeasurementId") + "\t|\t"
                 + resultSet.getString("MeasurementType") + "\t|\t"
-                + resultSet.getString("MeasurementUnits")+ "\n";
-        } catch (Exception e) {
-			e.printStackTrace();
-		}
+                + resultSet.getString("MeasurementUnits") + "\t|\t"
+                + resultSet.getString("UpdateDate") + "\n";
 		return query;
 	}
 	
-	public void exit(){
-        try {
-			resultSet.close();
-			statement.close();
-			connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	
+	public void exit() throws Exception {
+		resultSet.close();
+		statement.close();
+		connection.close();
+        
 	}
 	
     public static void main(String[] args) {
-		DatabaseManager db = new DatabaseManager();
-		System.out.println(db.getMeasurmentTypes());
-		db.exit();
+		try{
+			DatabaseManager db = new DatabaseManager();
+			System.out.println("Listing measurment types:");
+			System.out.println(db.getMeasurmentTypes());
+			db.addMeasurement("Speed", "21");
+			db.exit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }
