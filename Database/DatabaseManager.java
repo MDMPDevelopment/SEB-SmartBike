@@ -9,7 +9,6 @@ public class DatabaseManager {
 	private Connection connection = null;
     private ResultSet resultSet = null;
     private Statement statement = null;
-    
 	private final String DatabasePath = "./";
     private final String DatabaseName = "seb.db";
 	
@@ -33,32 +32,33 @@ public class DatabaseManager {
 			System.out.println("ERROR: type not found: " + resultSet.getString("MeasurementType"));
 			return;
 		}
-		
+		//This will build the query
 		String s = "INSERT INTO MeasurementEntities (MeasurementId, Value) " 
 						+ "VALUES (" + MeasurementId + ", " + data + ")";
+		//This will execute the query
 		statement.executeUpdate(s);
 	}
 	
-	/*
-	*public String getMeasurmentEntities(){
-	*	String query ="ID \t|\tType \t|\tUnits \n"; 
-	*	try {
-	*	resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities");
-    *    while (resultSet.next()) 
-    *    	query += "Id:"
-    *            + resultSet.getString("MeasurementId") + "\t|\t"
-    *            + resultSet.getString("") + "\t|\t"
-    *            + resultSet.getString("MeasurementUnits")+ "\n";
-    *    } catch (Exception e) {
-	*		e.printStackTrace();
-	*	}
-	*	return query;
-	*}
-	*/
+	
+	public String getMeasurmentEntities() throws Exception {
+		String query ="EntityId|MeasurementId  |\tValue \t|\tTime\n"; 
+		//Query the MeasurementEntities table
+		resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities");
+		//Build the string
+        while (resultSet.next()) 
+        	query += resultSet.getString("EntityId") + "\t|\t"
+                + resultSet.getString("MeasurementId") + "\t|\t"
+                + resultSet.getString("Value") + "\t|\t"
+                + resultSet.getString("TimeStamp") + "\n";
+		return query;
+	}
+	
 	
 	public String getMeasurmentTypes()  throws Exception {
-		String query ="ID \t|\tType \t|\tUnits \t|\t Time\n"; 
+		String query ="ID \t|\tType \t|\tUnits \n"; 
+		//Query the Measurements table
 		resultSet = statement.executeQuery("SELECT * FROM Measurements");
+        //Build the string
         while (resultSet.next()) 
         	query += resultSet.getString("MeasurementId") + "\t|\t"
                 + resultSet.getString("MeasurementType") + "\t|\t"
@@ -72,15 +72,17 @@ public class DatabaseManager {
 		resultSet.close();
 		statement.close();
 		connection.close();
-        
 	}
 	
     public static void main(String[] args) {
-		try{
+		try {
 			DatabaseManager db = new DatabaseManager();
 			System.out.println("Listing measurment types:");
 			System.out.println(db.getMeasurmentTypes());
-			db.addMeasurement("Speed", "21");
+			System.out.println("Listing measurment entities:");
+			System.out.println(db.getMeasurmentEntities());
+			//System.out.println("Adding GPS reading...");
+			//db.addMeasurement("GPS", "\"10, -23\"");
 			db.exit();
 		} catch (Exception e) {
 			e.printStackTrace();
