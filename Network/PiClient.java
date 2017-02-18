@@ -5,13 +5,18 @@ public class PiClient {
 	private String serverIP;
 	private int serverPort;
 
-	public PiClient(String serverIP, int serverPort) {
-		this.serverIP = serverIP;
+	public PiClient() {
+		this(false);
+	}
+
+	public PiClient(Boolean test) {
+		this.serverIP = test ? "127.0.0.1": "10.0.0.14";
 		this.serverPort = serverPort;
 	}
 
 	private Socket connectServer() {
 		Socket  connection = new Socket();
+		
 		return connection;
 	}
 }
