@@ -3,7 +3,7 @@ import java.net.DatagramPacket;
 import java.net.Inet4Address;
 //import DatabaseManager.java;
 
-public class JSONReceiver {
+public class ServerReceiver {
 	private final int PACKETSIZE = 500;
 	private DatabaseManager DbM;
 	private DatagramSocket socket;
@@ -11,13 +11,13 @@ public class JSONReceiver {
 	private int serverPort;
 	
 	
-	public JSONReceiver() throws Exception {
+	public ServerReceiver() throws Exception {
 		this(13375);
 	}
-	public JSONReceiver(int port) throws Exception {
+	public ServerReceiver(int port) throws Exception {
 		this("10.0.0.18", port);
 	}
-	public JSONReceiver(String serverIP, int serverPort) throws Exception {
+	public ServerReceiver(String serverIP, int serverPort) throws Exception {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
 		this.DbM = new DatabaseManager();
@@ -50,7 +50,7 @@ public class JSONReceiver {
 
 	public static void main(String [] args){
 		try {
-			JSONReceiver jr = new JSONReceiver();
+			ServerReceiver jr = new SServerReceiver);
 			jr.startReceiving();
 		} catch (Exception e){
 			System.out.println(e);
