@@ -7,16 +7,16 @@ import java.sql.Statement;
 public class DatabaseManager {
 	
 	private Connection connection = null;
-    private ResultSet resultSet = null;
-    private Statement statement = null;
+	private ResultSet resultSet = null;
+	private Statement statement = null;
 	private final String DatabasePath = "./";
-    private final String DatabaseName = "seb.db";
+	private final String DatabaseName = "seb.db";
 	
 	
 	public DatabaseManager() throws Exception {	
-        Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
-        statement = connection.createStatement();            		
+        	Class.forName("org.sqlite.JDBC");
+        	connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
+        	statement = connection.createStatement();            		
 	}
 	
 	public void addMeasurement(String type, String data)  throws Exception {
