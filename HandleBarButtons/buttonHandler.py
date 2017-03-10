@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import socket, sys, time
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(21, GPIO.IN)
-GPIO.setup(23, GPIO.IN)
+GPIO.setup(26, GPIO.IN) #right input
+GPIO.setup(24, GPIO.IN) #left input
 
 host = sys.argv[1]
 textport = sys.argv[2]
@@ -14,15 +14,15 @@ server_address = (host, port)
 
 while 1:
     data = ""
-    if GPIO.input(21):
+    if GPIO.input(26):
         data = "turnR:1"
         s.sendto(data.encode('utf-8'), server_address)
-        while GPIO.input(21):
+        while GPIO.input(26):
             time.sleep(0.5)
-    if GPIO.input(23):
+    if GPIO.input(24):
         data = "turnL:1"
         s.sendto(data.encode('utf-8'), server_address)
-        while GPIO.input(23):
+        while GPIO.input(24):
             time.sleep(0.5)
 
 s.shutdown(1)
