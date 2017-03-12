@@ -16,7 +16,7 @@ public class Server {
 	}
 
 	public Server(int port) throws Exception {
-		this("10.0.0.18", port);
+		this("192.168.145.130", port);
 	}
 
 	public Server(String serverIP, int serverPort) throws Exception {
@@ -32,19 +32,23 @@ public class Server {
 	
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
-		String [] pairs = s.split(":");
-		DbM.addMeasurement(pairs[0], pairs[1]);
-		switch (pairs[0]){
-			case "speed":	//handle speed data
-							break;
-			case "GPS"	:	//handle GPS data
-							break;
-			case "turnL":	//handle left turn
-							break;
-			case "turnR":	//handle right turn
-							break;
-			case "brake":	//handle brake
-							break;
+		String[] pairs = s.split(":");
+		if(pairs.length != 2 ){
+			System.out.println("Packet had an incorrect format!");
+		} else {
+			DbM.addMeasurement(pairs[0], pairs[1]);
+			switch (pairs[0]){
+				case "speed":	//handle speed data
+								break;
+				case "GPS"	:	//handle GPS data
+								break;
+				case "turnL":	//handle left turn
+								break;
+				case "turnR":	//handle right turn
+								break;
+				case "brake":	//handle brake
+								break;
+			}
 		}
 			
 		System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
