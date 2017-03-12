@@ -6,7 +6,7 @@ import java.net.*;
 //extends TestCase
 
 public class TestServer implements DatabaseManagerInterface {
-	private Server s;
+	private ServerThread st;
 	private DatagramSocket socket;
 	private InetAddress host;
 	private int port;
@@ -17,7 +17,8 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 
 	protected void setUp(String host, int port) throws Exception{
-		this.s = new Server(host, port, this);
+		this.st = new ServerThread(host, port, this);
+		st.start();
 		this.host = InetAddress.getByName(host);
 		this.port = port;
 		this.socket = new DatagramSocket();
@@ -74,7 +75,8 @@ public class TestServer implements DatabaseManagerInterface {
 	public void newRide() throws Exception{
 
 	}
-
+private Server s;
+	
 	public void exit() throws Exception{
 
 	}
@@ -88,4 +90,21 @@ public class TestServer implements DatabaseManagerInterface {
 			System.out.println("Tests failed...");
 		}
 	}
+
+	public class ServerThread extends Thread {
+		private Server s;
+		public ServerThread(String host, int port, DatabaseManagerInterface DbM) throws Exception {
+			this.s = new Server(host, port, DbM);
+		}
+		public void run() {
+	    	//System.out.println("MyThread running");
+			try{ 
+				this.s.startReceiving(); 
+			} catch (Exception e) {
+				System.out.println("Uhhh... Something broke...");	
+			}
+		}
+	}
 }
+
+
