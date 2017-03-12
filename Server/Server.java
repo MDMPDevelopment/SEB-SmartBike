@@ -5,7 +5,7 @@ import java.net.Inet4Address;
 
 public class Server {
 	private final int PACKETSIZE = 500;
-	private DatabaseManager DbM;
+	private DatabaseManagerInterface DbM;
 	private DatagramSocket socket;
 	private String serverIP;
 	private int serverPort;
@@ -14,21 +14,39 @@ public class Server {
 	public Server() throws Exception {
 		this(13375);
 	}
+
 	public Server(int port) throws Exception {
 		this("10.0.0.18", port);
 	}
+
 	public Server(String serverIP, int serverPort) throws Exception {
-		this.serverIP = serverIP;
-		this.serverPort = serverPort;
-		this.DbM = new DatabaseManager();
-		socket = new DatagramSocket(serverPort);
+		this(serverIP, serverPort, new DatabaseManager());
 	}
 
+	public Server(String serverIP, int serverPort, DatabaseManagerInterface DbM) throws Exception {
+		this.serverIP = serverIP;
+		this.serverPort = serverPort;
+		this.DbM = DbM;
+		socket = new DatagramSocket(serverPort);
+	}
 	
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String [] pairs = s.split(":");
 		DbM.addMeasurement(pairs[0], pairs[1]);
+		switch (pairs[0]){
+			case "speed":	//handle speed data
+							break;
+			case "GPS"	:	//handle GPS data
+							break;
+			case "turnL":	//handle left turn
+							break;
+			case "turnR":	//handle right turn
+							break;
+			case "brake":	//handle brake
+							break;
+		}
+			
 		System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 	}
 
@@ -43,6 +61,7 @@ public class Server {
 	public void setPort(int newPort) throws Exception {
 		this.serverPort = newPort;
 	}
+
 	public void exit() throws Exception {
 		this.socket.disconnect();
 		this.socket.close();
