@@ -26,7 +26,7 @@ while 1:
       t = time.time() - start - wait #time for 5 rotations
       speed = (2*pi*radius*rotations)/t #speed calc
       #send packet
-      data = "speed:%f" %speed
+      data = "Speed:%f" %speed
       s.sendto(data.encode('utf-8'), server_address)
       #reset count and time
       start = time.time()
