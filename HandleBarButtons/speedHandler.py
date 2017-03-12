@@ -33,5 +33,9 @@ while 1:
       count = 0
     else:
       count = count + 1
+  #reset if bike has stopped for 10 secs
+  #if time.time() - start > 10:
+    #start = time.time()
+    #count = 0    
 s.shutdown(1)
       
