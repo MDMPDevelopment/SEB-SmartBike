@@ -49,9 +49,9 @@ public class Server {
 				case "brake":	//handle brake
 								break;
 			}
+			System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 		}
 			
-		System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 	}
 
 	public void startReceiving() throws Exception {

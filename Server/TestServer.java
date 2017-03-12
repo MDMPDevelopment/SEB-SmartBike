@@ -13,7 +13,7 @@ public class TestServer implements DatabaseManagerInterface {
 	private boolean testMeasurementAdded;
 
 	protected void setUp() throws Exception{
-		this.setUp("127.0.0.1", 13375);
+		this.setUp("172.0.0.1", 13375);
 	}
 
 	protected void setUp(String host, int port) throws Exception{
@@ -82,7 +82,7 @@ public class TestServer implements DatabaseManagerInterface {
 	public static void main(String[] args){
 		try{
 			TestServer ts = new TestServer();
-			ts.setUp();
+			ts.setUp("192.168.145.130", 13375);
 			ts.runAllTests();
 		} catch (Exception e) {
 			System.out.println("Tests failed...");
