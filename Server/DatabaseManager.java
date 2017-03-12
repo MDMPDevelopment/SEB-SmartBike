@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.HashMap;
 
@@ -19,7 +20,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
         connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
         statement = connection.createStatement();
 	}
-	
+
 	public void addMeasurement(String type, String data)  throws Exception {
 		int MeasurementId = -1;
 		//Set resultSet to all measurement types
@@ -81,7 +82,9 @@ public class DatabaseManager implements DatabaseManagerInterface{
 		return query;
 	}
 
-	//NOT TESTED
+	/*
+	 * Return a HashMap of the current state of the system in the database
+	 */
 	public HashMap<String, String> getSystemState() throws Exception {
 		HashMap<String, String> state = new HashMap<>();
 
@@ -94,14 +97,41 @@ public class DatabaseManager implements DatabaseManagerInterface{
 		return state;
 	}
 
-  //NOT IMPLEMENTED
-	public void setSystemState(HashMap<String, String> state) throws Exception {
-		//given a hashmap, write to database SystemState table
+  /*
+	 * Given the variable and its state, update the database
+   */
+	public void setSystemState(String variable, String state) throws Exception {
+
+		String sqlStatement = "UPDATE SystemState " +
+												  "SET State = ? " +
+													"WHERE Variable = ? ";
+
+		PreparedStatement prpstat = connection.prepareStatement(sqlStatement);
+		prpstat.setString(1, state);
+		prpstat.setString(2, variable);
+		prpstat.executeUpdate();
+
 	}
 
+	/*
+	 * Record Ride history in history table
+	 * 1) Aggregate current entity table and write a row to History table for that aggregation
+	 * 2) Clear current entity table to begin new ride
+	 */
+  public void newRide() {
 
-  	public void newRide() {
-		//Aggregate current entity table, write a single row to History, then Clear entity table
+		// *TODO* This query is not correct, this method needs some work
+		String sqlStatement = "INSERT INTO History " +
+													"(AverageSpeed, MaxSpeed, Distance, Duration) " +
+													"SELECT AVG(Value) AS AverageSpeed " +
+													"			 ,MAX(Value) AS MaxSpeed " +
+													"			 ,0 AS Distance " +
+													"			 ,0 AS Duration " +
+													"FROM MeasurementEntities me " +
+													"JOIN Measurements m " +
+													"ON m.MeasurementId = me.MeasurementId " +
+													"WHERE m.MeasurementType = ? ";
+
 	}
 
 
@@ -111,17 +141,42 @@ public class DatabaseManager implements DatabaseManagerInterface{
 		connection.close();
 	}
 
+
     public static void main(String[] args) {
 		try {
 			DatabaseManager db = new DatabaseManager();
-			System.out.println("Listing measurment types:");
-			System.out.println(db.getMeasurmentTypes());
-			System.out.println("Listing measurment entities:");
-			System.out.println(db.getMeasurmentEntities());
+			//System.out.println("Listing measurment types:");
+			//System.out.println(db.getMeasurmentTypes());
+			//System.out.println("Listing measurment entities:");
+			//System.out.println(db.getMeasurmentEntities());
 			//System.out.println("Adding GPS reading...");
 			//db.addMeasurement("Speed", "10");
-			System.out.println("Listing measurment entities of type 'Speed':");
-			System.out.println(db.getMeasurmentEntities("Speed"));
+			//ystem.out.println("Listing measurment entities of type 'Speed':");
+			//System.out.println(db.getMeasurmentEntities("Speed"));
+
+			HashMap<String, String> state;
+
+			db.setSystemState("turnL", "0");
+
+			System.out.println("--- SYSTEM STATE---");
+			state = db.getSystemState();
+			for (String key: state.keySet()) {
+				System.out.println(key + " : " + state.get(key));
+			}
+
+
+			db.setSystemState("turnL", "1");
+
+
+			System.out.println("--- SYSTEM STATE---");
+			state = db.getSystemState();
+			for (String key: state.keySet()) {
+				System.out.println(key + " : " + state.get(key));
+			}
+
+
+
+
 
 			db.exit();
 		} catch (Exception e) {
