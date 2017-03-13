@@ -33,14 +33,12 @@ public class Server {
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
-		if(pairs.length != 2 ){
-			System.out.println("Packet had an incorrect format!");
-		} else {
+		if(pairs.length == 2 ){
 			switch (pairs[0]){
 				case "GPS"	:	DbM.addMeasurement(pairs[0], pairs[1]);
 								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
-				case "newRide": //new ride BD
+				case "newRide": DbM.newRide();
 								break;
 				default:		DbM.addMeasurement(pairs[0], pairs[1]);
 								DbM.setSystemState(pairs[0], pairs[1]);		
@@ -76,6 +74,4 @@ public class Server {
 			System.out.println(e);
 		}
 	}
-
 }
-
