@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.junit.*;
+//import org.junit.*;
 
 public class DatabaseManagerTest {
 

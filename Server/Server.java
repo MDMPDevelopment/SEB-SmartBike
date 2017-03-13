@@ -36,17 +36,14 @@ public class Server {
 		if(pairs.length != 2 ){
 			System.out.println("Packet had an incorrect format!");
 		} else {
-			DbM.addMeasurement(pairs[0], pairs[1]);
 			switch (pairs[0]){
-				case "speed":	//handle speed data
+				case "GPS"	:	DbM.addMeasurement(pairs[0], pairs[1]);
+								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
-				case "GPS"	:	//handle GPS data
+				case "newRide": //new ride BD
 								break;
-				case "turnL":	//handle left turn
-								break;
-				case "turnR":	//handle right turn
-								break;
-				case "brake":	//handle brake
+				default:		DbM.addMeasurement(pairs[0], pairs[1]);
+								DbM.setSystemState(pairs[0], pairs[1]);		
 								break;
 			}
 			//System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);

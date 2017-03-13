@@ -6,7 +6,7 @@ import java.net.*;
 //extends TestCase
 
 public class TestServer implements DatabaseManagerInterface {
-	private Server s;
+	private ServerThread st;
 	private DatagramSocket socket;
 	private InetAddress host;
 	private int port;
@@ -17,7 +17,8 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 
 	protected void setUp(String host, int port) throws Exception{
-		this.s = new Server(host, port, this);
+		this.st = new ServerThread(host, port, this);
+		st.start();
 		this.host = InetAddress.getByName(host);
 		this.port = port;
 		this.socket = new DatagramSocket();
@@ -25,14 +26,18 @@ public class TestServer implements DatabaseManagerInterface {
 
 	public void testSpeed() throws Exception{
 		testMeasurementAdded = false;
-		byte[] data = {'s', 'p', 'e', 'e', 'd', ':', '2', '7'};
+		byte[] data = {'S', 'p', 'e', 'e', 'd', ':', '2', '7'};
 		socket.send(new DatagramPacket(data, data.length, host, port));
-		TimeUnit.SECONDS.sleep(5);
+		TimeUnit.SECONDS.sleep(2);
 		assert testMeasurementAdded;
 	}
 
-	public void testTurnLights(){
-		assert false;
+	public void testTurnLights() throws Exception {
+		testMeasurementAdded = false;
+		byte[] data = {'t', 'u', 'r', 'n', 'L', ':', '1'};
+		socket.send(new DatagramPacket(data, data.length, host, port));
+		TimeUnit.SECONDS.sleep(2);
+		assert testMeasurementAdded;
 	}
 
 	public void runAllTests() throws Exception{
@@ -47,7 +52,6 @@ public class TestServer implements DatabaseManagerInterface {
 
 	//
 	public void addMeasurement(String type, String data) throws Exception{
-		//assert
 		testMeasurementAdded = true;
 	}
 
@@ -68,13 +72,14 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 
 	public void setSystemState(String variable, String state) throws Exception{
-
+		if(variable.equals("Speed")) assert state.equals("27");
+		if(variable.equals("turnL")) assert state.equals("1");
 	}
 
 	public void newRide() throws Exception{
 
 	}
-
+	
 	public void exit() throws Exception{
 
 	}
@@ -86,6 +91,21 @@ public class TestServer implements DatabaseManagerInterface {
 			ts.runAllTests();
 		} catch (Exception e) {
 			System.out.println("Tests failed...");
+		}
+	}
+
+	public class ServerThread extends Thread {
+		private Server s;
+		public ServerThread(String host, int port, DatabaseManagerInterface DbM) throws Exception {
+			this.s = new Server(host, port, DbM);
+		}
+		public void run() {
+	    	//System.out.println("MyThread running");
+			try{ 
+				this.s.startReceiving(); 
+			} catch (Exception e) {
+				System.out.println("Uhhh... Something broke...");	
+			}
 		}
 	}
 }
