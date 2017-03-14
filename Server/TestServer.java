@@ -57,6 +57,18 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 
 	public void runAllTests() throws Exception{
+		System.out.print("Testing 'getRunning'...");
+		st.testGetRunning();
+		System.out.println("\t\tPassed!");
+
+		System.out.print("Testing 'getServerIP'...");
+		st.testGetServerIP();
+		System.out.println("\tPassed!");
+
+		System.out.print("Testing 'getServerPort'...");
+		st.testGetServerPort();
+		System.out.println("\tPassed!");
+
 		System.out.print("Testing 'testSpeed'...");
 		this.testSpeed();
 		System.out.println("\t\tPassed!");
@@ -74,6 +86,7 @@ public class TestServer implements DatabaseManagerInterface {
 		System.out.println("\tPassed!");
 	}
 
+
 	//The server will receive UDP packets and it has to send the correct data to the server
 	//The code will assert that the server added a measurement and that it sent the set system state the correct data
 	public void addMeasurement(String type, String data) throws Exception{
@@ -88,10 +101,10 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 	
 	//The server doesn't use these methods, they are just here to match the interface
-	public String getMeasurmentEntities() throws Exception{
+	public String getMeasurmentEntities() throws Exception {
 		return null;
 	}
-	public String getMeasurmentEntities(String type) throws Exception{
+	public String getMeasurmentEntities(String type) throws Exception {
 		return null;
 	}
 	public String getMeasurmentTypes() throws Exception{
@@ -118,12 +131,29 @@ public class TestServer implements DatabaseManagerInterface {
 
 	public class ServerThread extends Thread {
 		private Server s;
+		private String host;
+		private int port;
+
 		public ServerThread(String host, int port, DatabaseManagerInterface DbM) throws Exception {
 			this.s = new Server(host, port, DbM);
+			this.host = host;
+			this.port = port;
 		}
 
 		public void exit() throws Exception{
 			s.exit();
+		}
+
+		public void testGetServerIP(){
+			assert s.getServerIP().equals(this.host);
+		}
+
+		public void testGetServerPort(){
+			assert s.getServerPort() == this.port;
+		}
+
+		public void testGetRunning(){
+			assert s.getRunning();
 		}
 
 		public void run() {

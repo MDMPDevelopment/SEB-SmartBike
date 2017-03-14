@@ -5,6 +5,7 @@ import java.net.Inet4Address;
 
 public class Server {
 	private final int PACKETSIZE = 500;
+	private boolean running; 
 	private DatabaseManagerInterface DbM;
 	private DatagramSocket socket;
 	private String serverIP;
@@ -27,9 +28,20 @@ public class Server {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
 		this.DbM = DbM;
+		this.running = false; 
 		socket = new DatagramSocket(serverPort);
 	}
 	
+	public boolean getRunning() {
+		return running;
+	}
+	public String getServerIP(){
+		return serverIP;
+	}
+	public int getServerPort(){
+		return serverPort;
+	}
+
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
@@ -50,6 +62,7 @@ public class Server {
 	}
 
 	public void startReceiving() throws Exception {
+		running = true;
 		while(true){
 			DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
 			socket.receive(packet);
