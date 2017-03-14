@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startRide(View view){
-        Toast.makeText(this, "Starting ride tracking...", Toast.LENGTH_SHORT).show();\
+        Toast.makeText(this, "Starting ride tracking...", Toast.LENGTH_SHORT).show();
 
     }
 
