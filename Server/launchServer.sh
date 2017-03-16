@@ -6,7 +6,7 @@ helmetIP="10.0.0.14"
 port=13375
 
 
-args=$(getopt -l "searchpath:" -o "s:h" -- "$@")
+args=$(getopt -o "s:a:e:p:h" -- "$@")
 
 eval set -- "$args"
 
