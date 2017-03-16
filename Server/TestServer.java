@@ -94,7 +94,8 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 	public void setSystemState(String variable, String state) throws Exception{
 		if(variable.equals("Speed")) assert state.equals("27");
-		if(variable.equals("turnL")) assert state.equals("1");
+		else if(variable.equals("turnL")) assert state.equals("1");
+		else assert false;
 	}
 	public void newRide() throws Exception{
 		testMeasurementAdded = true;	
@@ -120,7 +121,7 @@ public class TestServer implements DatabaseManagerInterface {
 	public static void main(String[] args){
 		try{
 			TestServer ts = new TestServer();
-			ts.setUp("192.168.145.130", 13375);
+			ts.setUp("10.0.0.18", 13375);
 			ts.runAllTests();
 			ts.exit();
 		} catch (Exception e) {
