@@ -3,6 +3,8 @@ import socket, sys, time
 import speedSensor
 import speedStub
 
+#Allows program to be run with either the sensor or the stub.  Conditional lets program
+#run without the testing argument.  Defaults to sensor if testing argument not set.
 test = False
 
 if len(sys.argv) > 3:
