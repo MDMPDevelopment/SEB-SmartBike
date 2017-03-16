@@ -1,8 +1,14 @@
 import RPi.GPIO as GPIO
 import socket, sys, time
 import speedSensor
+import speedStub
 
-speed_sensor = speedSensor()
+test = False
+
+if len(sys.argv) > 3:
+	test = (sys.argv[3][0] == 't' or sys.argv[3][0] == 'T')
+
+speed_sensor = speedStub() if test else speedSensor()
 
 #UDP setup
 host = sys.argv[1]
