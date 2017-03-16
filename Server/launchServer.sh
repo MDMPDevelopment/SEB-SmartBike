@@ -1,5 +1,9 @@
 #!/bin/bash
 
+serverIP="10.0.0.18"
+handleIP="10.0.0.11"
+helmetIP="10.0.0.14"
+port=13375
 
 
 args=$(getopt -l "searchpath:" -o "s:h" -- "$@")
@@ -13,24 +17,24 @@ while [ $# -ge 1 ]; do
                     shift
                     break
                    ;;
-                -sip)
-                        searchpath="$2"
+                -s)
+			serverIP="$2"
                         shift
                         ;;
-		-hbip)
-			
+		-a)
+			handleIP="$2"
 			shift
 			;;
-                -hlmip)
-                        searchpath="$2"
+                -e)
+                        helmetIP="$2"
                         shift
                         ;;
                 -p)
-                        searchpath="$2"
+                        port=$2
                         shift
                         ;;
                 -h)
-                        echo "Usage: launchServer.sh -sip serverIP -hbip handleBarIP -hlmip helmet IP -p port"
+                        echo "Usage: launchServer.sh -s serverIP -a handleBarIP -e helmet IP -p port"
                         exit 0
                         ;;
         esac
@@ -38,6 +42,10 @@ while [ $# -ge 1 ]; do
         shift
 done
 
-
+echo "serverIP = $serverIP"
+echo "helmetIP = $helmetIP"
+echo "handleIP = $handleIP"
+echo "port     = $port" 
+echo 
 echo "Starting the server..."
-
+echo 

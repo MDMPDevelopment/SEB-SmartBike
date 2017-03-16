@@ -102,16 +102,10 @@ public class TestServer implements DatabaseManagerInterface {
 	}
 	
 	//The server doesn't use these methods, they are just here to match the interface
-	public String getMeasurmentEntities() throws Exception {
-		return null;
-	}
-	public String getMeasurmentEntities(String type) throws Exception {
-		return null;
-	}
-	public String getMeasurmentTypes() throws Exception{
-		return null;
-	}
 	public HashMap<String, String> getSystemState() throws Exception{
+		return null;
+	}
+	public Object getHistory() {
 		return null;
 	}
 	public void exit() throws Exception{
