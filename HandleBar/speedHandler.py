@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import socket, sys, time
-#GPIO setup
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(22, GPIO.IN) #speed
+import speedSensor
+
+speed_sensor = speedSensor()
 
 #UDP setup
 host = sys.argv[1]
@@ -20,7 +20,7 @@ wait = 0.1 #wait used for debouncing
 start = time.time() #timer
 
 while 1:  
-  if not GPIO.input(22):
+  if not speed_sensor.sensorVal():
     time.sleep(wait) # wait so only one reading occurs
     if count == rotations: #enter if max rotation
       t = time.time() - start - wait #time for 5 rotations
@@ -36,6 +36,5 @@ while 1:
   #reset if bike has stopped for 10 secs
   #if time.time() - start > 10:
     #start = time.time()
-    #count = 0    
+    #count = 0 
 s.shutdown(1)
-      
