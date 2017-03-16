@@ -1,9 +1,8 @@
 import RPi.GPIO as GPIO
 import socket, sys, time
+import brakeSensor
 
-#GPIO SETUP
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(22, GPIO.IN) #brake uses PORT 22
+brake_sensor = brakeSensor()
 
 #UDP SETUP
 host = sys.argv[1] #can modify host/port
@@ -15,7 +14,7 @@ server_address = (host, port)
 
 brake =0 #used to compare if lights are already on
 while 1:
-    if not GPIO.input(22) == brake: #compares with current light state
+    if not brake_sensor.getVal() == brake: #compares with current light state
         brake = not brake #change light state
         #send packet
 		data = "brake:%d" %brake

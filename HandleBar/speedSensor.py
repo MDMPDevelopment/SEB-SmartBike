@@ -2,10 +2,11 @@ import RPi.GPIO as GPIO
 
 class speedSensor(object):
 	#Initialize the GPIO.
-	def __init__(self):
+	def __init__(self, port=22):
+		self.port = port
 		GPIO.setmode(GPIO.BOARD)
-	`	GPIO.setup(22, GPIO.IN) #speed
+	`	GPIO.setup(port, GPIO.IN) #speed
 
 	#Returns the value of the sensor connected to port 22.
 	def sensorVal():
-		return GPIO.input(22)
+		return GPIO.input(self.port)
