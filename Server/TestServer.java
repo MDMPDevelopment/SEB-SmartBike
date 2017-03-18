@@ -93,6 +93,7 @@ public class TestServer implements DatabaseManagerInterface {
 		testMeasurementAdded = true;
 	}
 	public void setSystemState(String variable, String state) throws Exception{
+		//bool to make sure it is called
 		if(variable.equals("Speed")) assert state.equals("27");
 		else if(variable.equals("turnL")) assert state.equals("1");
 		else assert false;

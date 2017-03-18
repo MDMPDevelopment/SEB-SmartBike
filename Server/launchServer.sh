@@ -49,3 +49,7 @@ echo "port     = $port"
 echo 
 echo "Starting the server..."
 echo 
+
+javac ./*.java
+#java -ea TestServer
+java -cp ".:sqlite-jdbc-3.16.1.jar" Server
