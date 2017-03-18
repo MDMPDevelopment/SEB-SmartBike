@@ -99,9 +99,9 @@ public class TestServer implements DatabaseManagerInterface {
 		else assert false;
 	}
 	public void newRide() throws Exception{
-		testMeasurementAdded = true;	
+		testMeasurementAdded = true;
 	}
-	
+
 	//The server doesn't use these methods, they are just here to match the interface
 	public HashMap<String, String> getSystemState() throws Exception{
 		return null;
@@ -154,10 +154,10 @@ public class TestServer implements DatabaseManagerInterface {
 
 		public void run() {
 	    	//System.out.println("MyThread running");
-			try{ 
-				this.s.startReceiving(); 
+			try{
+				this.s.startReceiving();
 			} catch (Exception e) {
-				System.out.println("Uhhh... Something broke...");	
+				System.out.println("Uhhh... Something broke...");
 			}
 		}
 	}
