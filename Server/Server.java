@@ -5,13 +5,13 @@ import java.net.Inet4Address;
 
 public class Server {
 	private final int PACKETSIZE = 500;
-	private boolean running; 
+	private boolean running;
 	private DatabaseManagerInterface DbM;
 	private DatagramSocket socket;
 	private String serverIP;
 	private int serverPort;
-	
-	
+
+
 	public Server() throws Exception {
 		this(13375);
 	}
@@ -28,10 +28,10 @@ public class Server {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
 		this.DbM = DbM;
-		this.running = false; 
+		this.running = false;
 		socket = new DatagramSocket(serverPort);
 	}
-	
+
 	public boolean getRunning() {
 		return running;
 	}
@@ -53,12 +53,11 @@ public class Server {
 				case "newRide": DbM.newRide();
 								break;
 				default:		DbM.addMeasurement(pairs[0], pairs[1]);
-								DbM.setSystemState(pairs[0], pairs[1]);		
+								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
 			}
 			//System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 		}
-			
 	}
 
 	public void startReceiving() throws Exception {
