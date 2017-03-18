@@ -17,7 +17,7 @@ public class Server {
 	}
 
 	public Server(int port) throws Exception {
-		this("192.168.145.130", port);
+		this("10.0.0.13", port);
 	}
 
 	public Server(String serverIP, int serverPort) throws Exception {
@@ -51,6 +51,12 @@ public class Server {
 								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
 				case "newRide": DbM.newRide();
+							break;
+				case "brake":	DbM.setSystemState(pairs[0],pairs[1]);
+							break;
+				case "turnL": 	DbM.setSystemState(pairs[0],pairs[1]);
+							break;
+				case "turnR":	DbM.setSystemState(pairs[0],pairs[1]);
 								break;
 				default:		DbM.addMeasurement(pairs[0], pairs[1]);
 								DbM.setSystemState(pairs[0], pairs[1]);

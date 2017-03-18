@@ -14,6 +14,7 @@ right = False
 left = False
 on1 = False
 on2 = False
+on3 = False
 
 while(1):
 	c.execute("SELECT * FROM SystemState WHERE Variable='turnR';")
@@ -31,7 +32,7 @@ while(1):
 	else:
 		on2 = False
 	if brake:
-		on3 = not on3
+		on3 = True
 	else:
 		on3 = False
 	
