@@ -1,8 +1,15 @@
 import RPi.GPIO as GPIO
 import socket, sys, time
-import brakeSensor
+import brakeSensor, brakeStub
 
-brake_sensor = brakeSensor()
+#Allows program to be run with either the sensor or the stub.  Conditional lets program
+#run without the testing argument.  Defaults to sensor if testing argument not set.
+test = False
+
+if len(sys.argv) > 3:
+        test = (sys.argv[3][0] == 't' or sys.argv[3][0] == 'T')
+
+brake_sensor = brakeStub() if test else brakeSensor()
 
 #UDP SETUP
 host = sys.argv[1] #can modify host/port
