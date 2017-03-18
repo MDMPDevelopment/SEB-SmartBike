@@ -20,26 +20,26 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 	public DatabaseManager(String dbName) {
 
-				DatabaseName = dbName;
+		DatabaseName = dbName;
 
-				try {
-        	Class.forName("org.sqlite.JDBC");
-				} catch (ClassNotFoundException e) {
-					System.out.println("Could not find SQLite driver.");
-					e.printStackTrace();
-				}
+		try {
+        		Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Could not find SQLite driver.");
+			e.printStackTrace();
+		}
 
-				try {
-        	connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
-        	statement = connection.createStatement();
-				} catch (SQLException e) {
-					System.out.println("Unable to create database connection.");
-					e.printStackTrace();
-				}
+		try {
+        		connection = DriverManager.getConnection("jdbc:sqlite:" + DatabasePath + DatabaseName);
+        		statement = connection.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Unable to create database connection.");
+			e.printStackTrace();
+		}
 	}
 
 	public DatabaseManager() {
-				this(DEFAULT_DATABASE);
+		this(DEFAULT_DATABASE);
 	}
 
 	public void addMeasurement(String type, String data) {
@@ -149,14 +149,12 @@ public class DatabaseManager implements DatabaseManagerInterface{
 		return state;
 	}
 
-  /*
-	 * Given the variable and its state, update the database
-   */
+	/*
+	* Given the variable and its state, update the database
+	*/
 	public void setSystemState(String variable, String state) {
 
-		String sqlStatement = "UPDATE SystemState " +
-												  "SET State = ? " +
-													"WHERE Variable = ? ";
+		String sqlStatement = "UPDATE SystemState " +  "SET State = ? " + "WHERE Variable = ? ";
 
 		try {
 			PreparedStatement prpstat = connection.prepareStatement(sqlStatement);
@@ -175,7 +173,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 	 * 1) Aggregate current entity table and write a row to History table for that aggregation
 	 * 2) Clear current entity table to begin new ride
 	 */
-  public void newRide() {
+	public void newRide() {
 
 		// *TODO* This query is not correct, this method needs some work
 		// String sqlStatement = "INSERT INTO History " +
@@ -191,7 +189,6 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 	}
 
-
 	public void exit() {
 		try {
 			resultSet.close();
@@ -204,7 +201,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 	}
 
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		try {
 			DatabaseManager db = new DatabaseManager();
 			//System.out.println("Listing measurment types:");
@@ -244,5 +241,5 @@ public class DatabaseManager implements DatabaseManagerInterface{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }
