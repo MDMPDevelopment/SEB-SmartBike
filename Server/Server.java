@@ -84,11 +84,13 @@ public class Server {
 		int port = Integer.parseInt(sport);
 		DatagramSocket socket = new DatagramSocket();
 		byte[] data;
+		String s = "";
 		//Iterate through the keys in the hash table building the message
 		HashMap<String, String> state = DbM.getSystemState();
-		for (String key : state.keySet(){
-			data += key.getBytes() + ':' +state.get(key).getBytes() + ' ';
+		for (String key : state.keySet()){
+			s += key + ':' +state.get(key) + ' ';
 		}
+		data = s.getBytes();
         socket.send(new DatagramPacket(data, data.length, host, port));
 	}
 	
