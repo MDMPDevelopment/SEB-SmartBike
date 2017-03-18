@@ -6,33 +6,36 @@ conn = sqlite3.connect('seb.db')
 c = conn.cursor()
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(21, GPIO.OUT)
-GPIO.setup(23, GPIO.OUT)
-right = 0
-left = 0
-on1 = 0
-led1 = 0
-on2 = 0
-led2 = 0
+GPIO.setup(24, GPIO.OUT)
+GPIO.setup(26, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+#GPIO.output(21, 1==1)
+right = False
+left = False
+on1 = False
+on2 = False
+
 while(1):
-	c.execute("SELECT * FROM SystemState WHERE Variable='turnR';")#.split("|")[1]
-	right = c.fetchone()[1]
-	c.execute("SELECT * FROM SystemState WHERE Variable='turnL';")#.split("|")[1]
-	left = c.fetchone()[1]
-	
+	c.execute("SELECT * FROM SystemState WHERE Variable='turnR';")
+	right = c.fetchone()[1] == '1'
+	c.execute("SELECT * FROM SystemState WHERE Variable='turnL';")
+	left = c.fetchone()[1] == '1'
+	c.execute("SELECT * FROM SystemState WHERE Variable='brake';")
+	brake = c.fetchone()[1] == '1' 
 	if right:
 		on1 = not on1
-		led1 = on1
-		GPIO.output(23, on1)
+	else:
+		on1 = False
 	if left:
 		on2 = not on2
-		led2 = on2
-		GPIO.output(21, on2)                
-	if on1:
-		led1 = not led1
-		GPIO.output(23, led1)
-		time.sleep(0.5)
-	if on2:
-		led2 = not led2
-		GPIO.output(21, led2)
-		time.sleep(0.5)
+	else:
+		on2 = False
+	if brake:
+		on3 = not on3
+	else:
+		on3 = False
+	
+	GPIO.output(26, on1)
+	GPIO.output(24, on2)
+	GPIO.output(22, on3)
+	time.sleep(1)
