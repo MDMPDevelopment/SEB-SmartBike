@@ -80,7 +80,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 	        while (resultSet.next())
 	        	query += resultSet.getString("EntityId") + "|"
 	                + resultSet.getString("MeasurementId") + "|"
-	                + resultSet.getString("Value") + "\n";
+	                + resultSet.getString("Value");
 	               // + resultSet.getString("TimeStamp") + "\n";
 		} catch (SQLException e) {
 			System.out.println("Could not get measurement entities.");
@@ -168,26 +168,79 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 	}
 
+
+
+	public String getHistory() {
+		String query = ""; //"EntityId|MeasurementId  |\tValue \t|\tTime\n";
+
+		try {
+			//Query the MeasurementEntities table
+			resultSet = statement.executeQuery("SELECT * FROM History");
+			//Build the string
+	        while (resultSet.next())
+	        	query += resultSet.getString("RideId") + "|"
+	                + resultSet.getString("AverageSpeed") + "|"
+									+ resultSet.getString("MaxSpeed") + "|"
+									+ resultSet.getString("Distance") + "|"
+	                + resultSet.getString("Duration");
+	               // + resultSet.getString("TimeStamp") + "\n";
+		} catch (SQLException e) {
+			System.out.println("Could not get history.");
+			e.printStackTrace();
+		}
+		return query;
+	}
+
 	/*
 	 * Record Ride history in history table
 	 * 1) Aggregate current entity table and write a row to History table for that aggregation
 	 * 2) Clear current entity table to begin new ride
 	 */
 	public void newRide() {
+		//"EntityId|MeasurementId  |\tValue \t|\tTime\n";
+		String fromClause = "FROM MeasurementEntities " +
+												"JOIN Measurements " +
+												"ON MeasurementEntities.MeasurementId = Measurements.MeasurementId " +
+												"WHERE MeasurementType = 'Speed'";
+		try {
+			resultSet = statement.executeQuery("SELECT AVG(Value) AS AverageSpeed " + fromClause);
+	    double averageSpeed = resultSet.getDouble("AverageSpeed");
 
-		// *TODO* This query is not correct, this method needs some work
-		// String sqlStatement = "INSERT INTO History " +
-		// 											"(AverageSpeed, MaxSpeed, Distance, Duration) " +
-		// 											"SELECT AVG(Value) AS AverageSpeed " +
-		// 											"			 ,MAX(Value) AS MaxSpeed " +
-		// 											"			 ,0 AS Distance " +
-		// 											"			 ,0 AS Duration " +
-		// 											"FROM MeasurementEntities me " +
-		// 											"JOIN Measurements m " +
-		// 											"ON m.MeasurementId = me.MeasurementId " +
-		// 											"WHERE m.MeasurementType = ? ";
+			resultSet = statement.executeQuery("SELECT MAX(Value) AS MaxSpeed " + fromClause);
+			double maxSpeed = resultSet.getDouble("MaxSpeed");
 
+			resultSet = statement.executeQuery("SELECT COUNT(*) AS SpeedEntries " + fromClause);
+			double distance = (2*Math.PI*0.29) * 5 * resultSet.getDouble("SpeedEntries");
+			resultSet = statement.executeQuery("SELECT JULIANDAY(MAX(Value)) - JULIANDAY(MIN(Value)) AS Duration " + fromClause);
+			//double duration = resultSet.getDouble("Duration");
+			double duration = 0;
+
+
+		PreparedStatement statement;
+
+		String insert = "INSERT INTO History (AverageSpeed, MaxSpeed, Distance, Duration) " +
+										"VALUES (?, ?, ?, ?) ";
+		statement = connection.prepareStatement(insert);
+		statement.setDouble(1, averageSpeed);
+		statement.setDouble(2, maxSpeed);
+		statement.setDouble(3, distance);
+		statement.setDouble(4, duration);
+		statement.executeUpdate();
+
+		String deleteME = "DELETE FROM MeasurementEntities ";
+		statement = connection.prepareStatement(deleteME);
+		statement.executeUpdate();
+
+		String deleteSequence = "DELETE FROM sqlite_sequence WHERE name = 'MeasurementEntities' ";
+		statement = connection.prepareStatement(deleteSequence);
+		statement.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println("Could not get measurement entities.");
+			e.printStackTrace();
+		}
 	}
+
 
 	public void exit() {
 		try {

@@ -56,7 +56,7 @@ public class DatabaseManagerTest {
   public void testAddMeasurement() {
     setup();
     db.addMeasurement("Speed", "15");
-    Assert.assertEquals(db.getMeasurmentEntities(), "1|1|15\n");
+    Assert.assertEquals(db.getMeasurmentEntities(), "1|1|15");
     tearDown();
   }
 
@@ -78,7 +78,40 @@ public class DatabaseManagerTest {
     tearDown();
   }
 
-  public void testNewRide() {}
+  public void testGetHistory() {
+    setup();
+
+    String sql = "INSERT INTO History " +
+                 "(AverageSpeed, MaxSpeed, Distance, Duration) " +
+                 "VALUES (10, 30, 5, 0) ";
+
+    executeSQLHelper(sql);
+
+    String result = db.getHistory();
+    Assert.assertEquals(result, "1|10.0|30.0|5.0|0.0");
+
+    tearDown();
+  }
+
+  public void testNewRide() {
+    setup();
+
+    db.addMeasurement("Speed", "15");
+    db.addMeasurement("Speed", "20");
+    db.addMeasurement("Speed", "25"); //avg = 20
+
+    db.newRide();
+
+    Assert.assertEquals(db.getMeasurmentEntities(), "");
+
+     //2Pir * 5 rotations per speed reading * 3 speed readings
+    double distance = (2*Math.PI*0.29) * 5.0 * 3.0;
+
+    //RideId|AvgSpeed|MaxSpeed|Distance|Duration
+    Assert.assertEquals(db.getHistory(), "1|20.0|25.0|" + distance + "|0.0" );
+
+    tearDown();
+  }
 
 
 
@@ -98,8 +131,12 @@ public class DatabaseManagerTest {
   public static void main(String args[]) {
     DatabaseManagerTest test = new DatabaseManagerTest();
 
+    System.out.println("Starting Tests.");
+
     test.testAddMeasurement();
     test.testGetSetSystemState();
+    test.testGetHistory();
+    test.testNewRide();
 
     System.out.println("Test Complete.");
 

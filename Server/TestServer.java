@@ -106,7 +106,7 @@ public class TestServer implements DatabaseManagerInterface {
 	public HashMap<String, String> getSystemState() throws Exception{
 		return null;
 	}
-	public Object getHistory() {
+	public String getHistory() {
 		return null;
 	}
 	public void exit() throws Exception{
