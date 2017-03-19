@@ -10,10 +10,10 @@
     tools:context="com.example.benearle.sebapp.MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello Welcome to the SEB App!"
-        android:id="@+id/textView" />
+        android:text="Hello Welcome to the SEB App!" />
 
     <Button
         android:layout_width="wrap_content"

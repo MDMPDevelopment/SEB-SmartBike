@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">SEBapp</string>
-    <string name="title_activity_state">StateActivity</string>
+    <string name="app_name">SEB</string>
+    <string name="title_activity_state">System State</string>
 </resources>
