@@ -16,7 +16,7 @@ public class Server {
 	}
 
 	public Server(int port) throws Exception {
-		this("10.0.0.13", port);
+		this("192.168.145.130", port);
 	}
 
 	public Server(String serverIP, int serverPort) throws Exception {
@@ -44,7 +44,7 @@ public class Server {
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
-		if(pairs.length == 2 ){
+		if(pairs.length <= 2 ){
 			switch (pairs[0]){
 				case "GPS"	:	DbM.addMeasurement(pairs[0], pairs[1]);
 								DbM.setSystemState(pairs[0], pairs[1]);
@@ -69,6 +69,7 @@ public class Server {
 
 	public void startReceiving() throws Exception {
 		running = true;
+		//System.out.println("Starting to receive");
 		while(true){
 			DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
 			socket.receive(packet);
@@ -79,8 +80,8 @@ public class Server {
 	//Sends a copy of the system state to the ip + port that requested it
 	//It will be sent in the following format:
 	//"Speed:10 turnL:1 turnR:0 brake:1 "
-	private void sendState(String ip, String sport) throws Exception{
-		InetAddress host = InetAddress.getByName(ip);
+	private void sendState(InetAddress host, String sport) throws Exception{
+		//InetAddress host = InetAddress.getByName(ip);
 		int port = Integer.parseInt(sport);
 		DatagramSocket socket = new DatagramSocket();
 		byte[] data;
@@ -105,8 +106,8 @@ public class Server {
 
 	public static void main(String [] args){
 		try {
-			Server jr = new Server();
-			jr.startReceiving();
+			Server s = new Server();
+			s.startReceiving();
 		} catch (Exception e){
 			System.out.println(e);
 		}
