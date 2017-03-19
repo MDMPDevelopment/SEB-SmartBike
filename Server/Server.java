@@ -44,7 +44,7 @@ public class Server {
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
-		if(pairs.length >= 2 ){
+		if(pairs.length == 2 ){
 			switch (pairs[0]){
 				case "GPS"	:	DbM.addMeasurement(pairs[0], pairs[1]);
 								DbM.setSystemState(pairs[0], pairs[1]);
@@ -55,7 +55,7 @@ public class Server {
 							break;
 				case "turnL": 	DbM.setSystemState(pairs[0],pairs[1]);
 							break;
-				case "getState":sendState(pairs[1], pairs[2]);
+				case "getState":sendState(packet.getAddress(), pairs[1]);
 							break;
 				case "turnR":	DbM.setSystemState(pairs[0],pairs[1]);
 								break;

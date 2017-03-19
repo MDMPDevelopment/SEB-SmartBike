@@ -1,5 +1,6 @@
 package com.example.benearle.sebapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.*;
@@ -27,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e){
             System.out.println("ERROR");
         }
+    }
+
+    public void showState(View view) {
+        Intent intent = new Intent(this, StateActivity.class);
+        startActivity(intent);
     }
 
     public void startRide(View view) {

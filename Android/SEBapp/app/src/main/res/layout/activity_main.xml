@@ -25,13 +25,14 @@
         android:layout_alignParentStart="true" />
 
     <Button
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check System State"
-        android:id="@+id/button2"
-        android:layout_below="@+id/button"
+        android:layout_alignEnd="@+id/button"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/button" />
+        android:layout_below="@+id/button"
+        android:onClick="showState"
+        android:text="Check System State" />
 
     <Button
         android:layout_width="wrap_content"
@@ -39,7 +40,8 @@
         android:text="Set Max Speed"
         android:id="@+id/button3"
         android:layout_below="@+id/button2"
-        android:layout_alignEnd="@+id/button2" />
+        android:layout_alignEnd="@+id/button2"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
