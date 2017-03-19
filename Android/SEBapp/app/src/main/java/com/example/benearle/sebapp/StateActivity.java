@@ -13,6 +13,7 @@ import java.net.InetAddress;
 
 public class StateActivity extends AppCompatActivity {
     private final int PACKETSIZE = 500;
+    private final String ip = "192.168.145.130";
     private DatagramSocket socket;
     private InetAddress host;
     private int port;
@@ -20,7 +21,7 @@ public class StateActivity extends AppCompatActivity {
     TextView textView;
 
     private void initConnection() throws Exception {
-        host = InetAddress.getByName("10.0.0.13");
+        host = InetAddress.getByName(ip);
         port = 13375;
         socket = new DatagramSocket();
     }
@@ -28,6 +29,7 @@ public class StateActivity extends AppCompatActivity {
     private void updateInfo() throws Exception{
         byte[] data = "getState:13375".getBytes();
         socket.send(new DatagramPacket(data, data.length, host, port));
+
         DatagramSocket s = new DatagramSocket(13375);
         DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
         s.receive(packet);
@@ -45,7 +47,7 @@ public class StateActivity extends AppCompatActivity {
         try{
             updateInfo();
         } catch (Exception e){
-            System.out.println("Could not refresh.");
+            System.out.println("Could not refresh: " + e.toString());
         }
     }
 
@@ -57,13 +59,18 @@ public class StateActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         textView = (TextView) findViewById(R.id.speedView);
-
         try {
             initConnection();
+        } catch (Exception e){
+            System.out.println("ERROR in initConnection: " + e.getMessage());
+        }
+
+        try {
             updateInfo();
         } catch (Exception e){
-            System.out.println("ERROR");
+            System.out.println("ERROR in updateInfo: " + e.getMessage());
         }
+
     }
 
 }

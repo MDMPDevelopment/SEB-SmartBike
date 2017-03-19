@@ -9,12 +9,13 @@ import java.net.*;
 import java.sql.*;
 
 public class MainActivity extends AppCompatActivity {
+    private static String ip = "192.168.145.130";
     private DatagramSocket socket;
     private InetAddress host;
     private int port;
 
     private void initConnection() throws Exception {
-        host = InetAddress.getByName("10.0.0.13");
+        host = InetAddress.getByName(ip);
         port = 13375;
         socket = new DatagramSocket();
     }
