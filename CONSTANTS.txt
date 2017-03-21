@@ -1,0 +1,3 @@
+*** Note important values here ***
+
+Bike wheel radius = 0.29 m
