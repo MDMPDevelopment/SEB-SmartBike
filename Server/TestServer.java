@@ -89,28 +89,32 @@ public class TestServer implements DatabaseManagerInterface {
 
 	//The server will receive UDP packets and it has to send the correct data to the server
 	//The code will assert that the server added a measurement and that it sent the set system state the correct data
-	public void addMeasurement(String type, String data) throws Exception{
+	public void addMeasurement(String type, String data){
 		testMeasurementAdded = true;
 	}
-	public void setSystemState(String variable, String state) throws Exception{
+	public void setSystemState(String variable, String state){
 		//bool to make sure it is called
 		if(variable.equals("Speed")) assert state.equals("27");
 		else if(variable.equals("turnL")) assert state.equals("1");
 		else assert false;
 	}
-	public void newRide() throws Exception{
+	public void newRide(){
 		testMeasurementAdded = true;
 	}
 
 	//The server doesn't use these methods, they are just here to match the interface
-	public HashMap<String, String> getSystemState() throws Exception{
+	public HashMap<String, String> getSystemState(){
 		return null;
 	}
 	public String getHistory() {
 		return null;
 	}
-	public void exit() throws Exception{
-		st.exit();
+	public void exit(){
+		try{
+			st.exit();
+		} catch (Exception e){
+			//this doesn't really matter
+		}
 	}
 
 	public static void main(String[] args){
