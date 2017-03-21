@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.*;
 import android.view.*;
 import java.net.*;
-import java.sql.*;
 
 public class MainActivity extends AppCompatActivity {
     private static String ip = "192.168.145.130";
