@@ -23,6 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         maxSpeed = (TextView) findViewById(R.id.maxSpeed);
         radius = (TextView) findViewById(R.id.radius);
+        netInit();
     }
 
     public void sendMaxSpeed(View view){
