@@ -8,16 +8,16 @@ import android.view.*;
 import android.widget.TextView;
 
 public class StateActivity extends AppCompatActivity {
-    private int speed;
+    private boolean debug = true;
     TextView textView;
-    RequestState rs;
+    RequestStateInterface rs;
 
     private void updateInfo(){
         HashMap<String, String> state = rs.getState();
         for (String key : state.keySet()){
-            if(key == "Speed") speed = Integer.parseInt(state.get(key));
+            if(key == "Speed") textView.setText("Speed: " + Integer.parseInt(state.get(key)));
         }
-        textView.setText("Speed: " + speed);
+
     }
 
 
@@ -28,12 +28,15 @@ public class StateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        speed = 0;
         setContentView(R.layout.activity_state);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         textView = (TextView) findViewById(R.id.speedView);
-        rs = new RequestState();
+
+        //used for stubbing out the server communication since networking from the emulator is hard.
+        if(debug) rs = new RequestStateStub();
+        else rs = new RequestState();
+
         updateInfo();
 
     }

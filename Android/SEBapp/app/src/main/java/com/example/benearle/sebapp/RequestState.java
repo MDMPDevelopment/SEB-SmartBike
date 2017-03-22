@@ -27,13 +27,13 @@ public class RequestState implements RequestStateInterface{
 	//Network Initialization
 	private void netInit(){
 		try {
-	        socket = new DatagramSocket();
-	        host = InetAddress.getByName(serverIP);
-	        s = new DatagramSocket(13378);
-	    } catch (Exception e) {
-	    	System.out.println("Error in netInit().");
+			socket = new DatagramSocket();
+			host = InetAddress.getByName(serverIP);
+			s = new DatagramSocket(13378);
+		} catch (Exception e) {
+			System.out.println("Error in netInit().");
 			System.out.println(e.getStackTrace());
-	    }
+		}
 	}
 
 	public HashMap<String, String> getState(){

@@ -35,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    public void settings(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     public void startRide(View view) {
         Toast.makeText(this, "Starting a new ride...", Toast.LENGTH_SHORT).show();
         byte[] data = {'n', 'e', 'w', 'R', 'i', 'd', 'e', ':', '1'};
