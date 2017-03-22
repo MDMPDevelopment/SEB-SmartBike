@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.*;
 import android.view.*;
 import java.net.*;
-import java.sql.*;
 
 public class MainActivity extends AppCompatActivity {
     private static String ip = "192.168.145.130";
@@ -33,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void showState(View view) {
         Intent intent = new Intent(this, StateActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void settings(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 

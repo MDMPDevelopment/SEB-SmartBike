@@ -1,2 +1,0 @@
-pi@raspberrypi:~/Desktop/SEB/SmartBike/Network $ java -classpath ".:sqlite-jdbc-3.16.1.jar" DatabaseManager
-

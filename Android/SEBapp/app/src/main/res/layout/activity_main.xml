@@ -35,21 +35,13 @@
         android:text="Check System State" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Set Max Speed"
         android:id="@+id/button3"
-        android:layout_below="@+id/button2"
-        android:layout_alignEnd="@+id/button2"
-        android:layout_alignParentStart="true" />
-
-    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_alignBottom="@+id/button3"
-        android:layout_toEndOf="@+id/button2" />
+        android:layout_alignEnd="@+id/button2"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button2"
+        android:onClick="settings"
+        android:text="Settings" />
 
 </RelativeLayout>
