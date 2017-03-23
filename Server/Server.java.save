@@ -4,21 +4,19 @@ import java.util.HashMap;
 
 public class Server {
 	private final int PACKETSIZE = 500;
-	private final boolean debug = false;
 	private boolean running;
 	private DatabaseManagerInterface DbM;
 	private DatagramSocket socket;
 	private String serverIP;
 	private int serverPort;
-	private int maxSpeed;
-	private boolean speeding;
+
 
 	public Server() throws Exception {
 		this(13375);
 	}
 
 	public Server(int port) throws Exception {
-		this("192.168.145.130", port);
+		this("10.0.0.13", port);
 	}
 
 	public Server(String serverIP, int serverPort) throws Exception {
@@ -30,8 +28,6 @@ public class Server {
 		this.serverPort = serverPort;
 		this.DbM = DbM;
 		this.running = false;
-		speeding = false;
-		maxSpeed = 999;
 		socket = new DatagramSocket(serverPort);
 	}
 
@@ -48,68 +44,31 @@ public class Server {
 	private void packetReceived(DatagramPacket packet) throws Exception {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
-		if(pairs.length == 2 ){
+		if(pairs.length >= 2 ){
 			switch (pairs[0]){
-				case "GPS"	:		DbM.addMeasurement(pairs[0], pairs[1]);
-									DbM.setSystemState(pairs[0], pairs[1]);
+				case "GPS"	:	DbM.addMeasurement(pairs[0], pairs[1]);
+								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
-				case "setRadius":	int rad = Integer.parseInt(pairs[1]);
-									System.out.println("rad: " + rad);
-									//assert(rad!=null);	
-									//DbM.setRad()
-				case "setMaxSpeed": maxSpeed = Integer.parseInt(pairs[1]);
+				case "newRide": DbM.newRide();
+							break;
+				case "brake":	DbM.setSystemState(pairs[0],pairs[1]);
+							break;
+				case "turnL": 	DbM.setSystemState(pairs[0],pairs[1]);
+							break;
+				case "getState":sendState(pairs[1], pairs[2]);
+							break;
+				case "turnR":	DbM.setSystemState(pairs[0],pairs[1]);
 								break;
-				case "newRide": 	DbM.newRide();
-								break;
-				case "brake":		DbM.setSystemState(pairs[0],pairs[1]);
-								break;
-				case "turnL": 		DbM.setSystemState(pairs[0],pairs[1]);
-								break;
-				case "getState":	sendState(packet.getAddress(), pairs[1]);
-								break;
-				case "turnR":		DbM.setSystemState(pairs[0],pairs[1]);
-								break;
-				case "Speed":		DbM.addMeasurement(pairs[0], pairs[1]);
-									DbM.setSystemState(pairs[0], pairs[1]);
-									if(Integer.parseInt(pairs[1]) > maxSpeed & !speeding){
-										speeding = true;
-										alertRider();
-									}
-									if(speeding & Integer.parseInt(pairs[1]) < maxSpeed)
-										speeding = false;
-								break;
-				default:			System.out.println("Unknown request: " + s);
+				default:		DbM.addMeasurement(pairs[0], pairs[1]);
+								DbM.setSystemState(pairs[0], pairs[1]);
 								break;
 			}
 			//System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 		}
 	}
 
-	public void alertRider(){
-		if(debug) System.out.println("TOO FAST!");
-		else {
-			int sport = 11111;
-			InetAddress host = new InetAddress("10.0.0.12"); //I made this up
-			try {
-				int port = Integer.parseInt(sport);
-        	        	DatagramSocket socket = new DatagramSocket();
-	        	        byte[] data;
-				//send udp to handle pi
-				if(speeding ) {
-					data = "slowRider:1".getBytes();
-				} else {
-					data = "slowRider:0".getBytes();
-				}
-				socket.send(new DatagramPacket(data, data.length, host, port));
-			} catch (Exception e) {
-				System.out.println("Error alerting rider");
-			}
-		}
-	}
-
 	public void startReceiving() throws Exception {
 		running = true;
-		//System.out.println("Starting to receive");
 		while(true){
 			DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
 			socket.receive(packet);
@@ -120,16 +79,16 @@ public class Server {
 	//Sends a copy of the system state to the ip + port that requested it
 	//It will be sent in the following format:
 	//"Speed:10 turnL:1 turnR:0 brake:1 "
-	private void sendState(InetAddress host, String sport) throws Exception{
-		//InetAddress host = InetAddress.getByName(ip);
+	private void sendState(String ip, String sport) throws Exception{
+		InetAddress host = InetAddress.getByName(ip);
 		int port = Integer.parseInt(sport);
 		DatagramSocket socket = new DatagramSocket();
 		byte[] data;
-		String s = "";
+		String s;
 		//Iterate through the keys in the hash table building the message
 		HashMap<String, String> state = DbM.getSystemState();
 		for (String key : state.keySet()){
-			s += key + ':' +state.get(key) + ' ';
+			s += key + ':' +statey).getBytes() + ' ';
 		}
 		data = s.getBytes();
         socket.send(new DatagramPacket(data, data.length, host, port));
@@ -146,8 +105,8 @@ public class Server {
 
 	public static void main(String [] args){
 		try {
-			Server s = new Server();
-			s.startReceiving();
+			Server jr = new Server();
+			jr.startReceiving();
 		} catch (Exception e){
 			System.out.println(e);
 		}
