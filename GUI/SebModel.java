@@ -5,31 +5,37 @@ import java.util.HashMap;
 
 public class SebModel {
 
-  private HashMap<String, String> state;
-  private DataRequester requester;
+  private boolean turnL, turnR, brake;
+  private double speed;
+
+  private RequestStateInterface requester;
 
   public SebModel() {
-    this(new ServerRequester());
+    this(new RequestState());
   }
 
-  public SebModel(DataRequester requester) {
+  public SebModel(RequestStateInterface requester) {
     this.requester = requester;
+    updateInfo();
   }
 
-  public HashMap<String, String> getState() {
-    return state;
-  }
+  public boolean getTurnL() { return turnL; }
+  public boolean getTurnR() { return turnR; }
+  public boolean getBrake() { return brake; }
+  public double getSpeed() { return speed; }
 
   public void updateInfo() {
-    state = requester.getState();
+    HashMap<String, String> state = requester.getState();
+    turnL = state.get("turnL").equals("1") ? true : false;
+    turnR = state.get("turnR").equals("1") ? true : false;
+    brake = state.get("brake").equals("1") ? true : false;
+    speed = Double.parseDouble(state.get("Speed"));
   }
 
-  public static void main(String args[]) {
+//  public static void main(String args[]) {
+//
+//    SebModel model = new SebModel(new RequestStateStub());
+//    model.updateInfo();
+//  }
 
-    SebModel model = new SebModel(new ServerRequesterStub());
-
-    model.updateInfo();
-    HashMap<String, String> currentState = model.getState();
-
-  }
 }
