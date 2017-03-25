@@ -8,15 +8,11 @@ import android.view.*;
 import java.net.*;
 
 public class MainActivity extends AppCompatActivity {
-    private static String ip = "192.168.145.130";
-    private DatagramSocket socket;
-    private InetAddress host;
-    private int port;
+    public final static String ip = "192.168.0.31";
+
 
     private void initConnection() throws Exception {
-        host = InetAddress.getByName(ip);
-        port = 13375;
-        socket = new DatagramSocket();
+
     }
 
     @Override
@@ -43,11 +39,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void startRide(View view) {
         Toast.makeText(this, "Starting a new ride...", Toast.LENGTH_SHORT).show();
-        byte[] data = {'n', 'e', 'w', 'R', 'i', 'd', 'e', ':', '1'};
-        try {
-            socket.send(new DatagramPacket(data, data.length, host, port));
-        } catch (Exception e){
-            System.out.println("ERROR");
-        }
+        final byte[] data = {'n', 'e', 'w', 'R', 'i', 'd', 'e', ':', '1'};
+        new Thread(new Runnable() {
+            private DatagramSocket socket;
+            private InetAddress host;
+            private int port;
+            public void run() {
+                try {
+                    host = InetAddress.getByName(ip);
+                    port = 13375;
+                    socket = new DatagramSocket();
+                    //if (!socket.getBroadcast()) socket.setBraodcast(true);
+                    socket.send(new DatagramPacket(data, data.length, host, port));
+                } catch (Exception e) {
+                    System.out.println("ERROR");
+                }
+                socket.close();
+            }
+        }).start();
     }
 }

@@ -10,7 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class SettingsActivity extends AppCompatActivity {
-    private final String serverIP = "192.168.145.130";
+    private final String serverIP = MainActivity.ip;
     private final int port =  13375;
     private TextView maxSpeed;
     private TextView radius;
@@ -39,6 +39,9 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             socket = new DatagramSocket();
             host = InetAddress.getByName(serverIP);
+
+
+
         } catch (Exception e) {
             System.out.println("Error in netInit().");
             System.out.println(e.getStackTrace());
@@ -53,5 +56,4 @@ public class SettingsActivity extends AppCompatActivity {
             System.out.println(e.getStackTrace());
         }
     }
-
 }

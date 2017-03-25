@@ -9,53 +9,65 @@ public class RequestState implements RequestStateInterface{
 	//Standard networking variables
 	private final int PACKETSIZE = 500;
 	private String serverIP;
+
 	private int port;
-	private DatagramSocket socket;
-	private InetAddress host;
 	private DatagramSocket s;
 
 	public RequestState(){
-		this("192.168.145.130", 13375);
+		this(MainActivity.ip, 13375);
 	}
 
 	public RequestState(String ip, int p){
 		serverIP = ip;
 		port = p;
-		netInit();
-	}
-
-	//Network Initialization
-	private void netInit(){
-		try {
-			socket = new DatagramSocket();
-			host = InetAddress.getByName(serverIP);
-			s = new DatagramSocket(13378);
-		} catch (Exception e) {
-			System.out.println("Error in netInit().");
-			System.out.println(e.getStackTrace());
-		}
 	}
 
 	public HashMap<String, String> getState(){
-		String[] pairs;
-		HashMap<String, String> state = new HashMap<>();
 		try {
-	        socket.send(new DatagramPacket(data, data.length, host, port));
-	        DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
-	        s.receive(packet);
-	        String str = new String(packet.getData());
-	        pairs = str.trim().split(" ");
-			 //must be even since we are getting variable:value pairs
-	   		for(int i = 0; i < pairs.length; i++){
-	   			String[] combo = pairs[i].split(":");
-	   			assert(combo.length == 2);
-	   			state.put(combo[0], combo[1]);
-	    	}	
-	    	return state;
-		} catch(Exception e){
-			System.out.println("Error getting state.");
+			HashMap<String, String> state = new HashMap<>();
+			Thread myThread = new Thread(new RunnableGetState(state));
+			myThread.start();
+			myThread.join();
+			return state;
+		} catch (Exception e){
 			System.out.println(e.getStackTrace());
-			return null;
+		}
+	return null;
+	}
+
+
+	class RunnableGetState implements Runnable {
+		private HashMap<String, String> state;
+
+		private DatagramSocket socket, s;
+		private InetAddress host;
+		String[] pairs;
+
+		public RunnableGetState(HashMap<String, String> state) {
+			this.state = state;
+		}
+
+		public void run() {
+			try {
+				socket = new DatagramSocket();
+				host = InetAddress.getByName(serverIP);
+				s = new DatagramSocket(13378);
+
+				socket.send(new DatagramPacket(data, data.length, host, port));
+				DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
+				s.receive(packet);
+				String str = new String(packet.getData());
+				pairs = str.trim().split(" ");
+				//must be even since we are getting variable:value pairs
+				for(int i = 0; i < pairs.length; i++){
+					String[] combo = pairs[i].split(":");
+					assert(combo.length == 2);
+					state.put(combo[0], combo[1]);
+				}
+			} catch(Exception e) {
+				System.out.println("Error getting state.");
+				System.out.println(e.getStackTrace());
+			}
 		}
 	}
 

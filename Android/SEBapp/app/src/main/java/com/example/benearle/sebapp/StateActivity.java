@@ -8,16 +8,23 @@ import android.view.*;
 import android.widget.TextView;
 
 public class StateActivity extends AppCompatActivity {
-    private boolean debug = true;
+    private boolean debug = false;
     TextView textView;
     RequestStateInterface rs;
 
     private void updateInfo(){
-        HashMap<String, String> state = rs.getState();
-        for (String key : state.keySet()){
-            if(key == "Speed") textView.setText("Speed: " + Integer.parseInt(state.get(key)));
-        }
-
+        //Thread udpSendThread = new Thread(new Runnable() {
+        runOnUiThread(new Runnable() {
+        @Override
+            public void run() {
+                HashMap<String, String> state = rs.getState();
+                for (String key : state.keySet()) {
+                    if (key == "Speed")
+                        textView.setText("Speed: " + Integer.parseInt(state.get(key)));
+                }
+                System.out.println(rs);
+            }
+        });
     }
 
 
