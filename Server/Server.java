@@ -53,11 +53,11 @@ public class Server {
 				case "GPS"	:		DbM.addMeasurement(pairs[0], pairs[1]);
 									DbM.setSystemState(pairs[0], pairs[1]);
 								break;
-				case "setRadius":	double rad = Double.parseInt(pairs[1]);
+				case "setRadius":	double rad = Double.parseDouble(pairs[1]);
 									System.out.println("rad: " + rad);
 									//assert(rad!=null);	
 									//DbM.setRad()
-				case "setMaxSpeed": maxSpeed = Double.parseInt(pairs[1]);
+				case "setMaxSpeed": maxSpeed = Double.parseDouble(pairs[1]);
 								break;
 				case "newRide": 	DbM.newRide();
 								break;
@@ -71,11 +71,11 @@ public class Server {
 								break;
 				case "Speed":		DbM.addMeasurement(pairs[0], pairs[1]);
 									DbM.setSystemState(pairs[0], pairs[1]);
-									if(Integer.parseInt(pairs[1]) > maxSpeed & !speeding){
+									if(Double.parseDouble(pairs[1]) > maxSpeed & !speeding){
 										speeding = true;
 										alertRider();
 									}
-									if(speeding & Integer.parseInt(pairs[1]) < maxSpeed)
+									if(speeding & Double.parseDouble(pairs[1]) < maxSpeed)
 										speeding = false;
 								break;
 				default:			System.out.println("Unknown request: " + s);
@@ -87,24 +87,24 @@ public class Server {
 
 	public void alertRider(){
 		if(debug) System.out.println("TOO FAST!");
-		else {
-			int sport = 11111;
-			InetAddress host = new InetAddress("10.0.0.12"); //I made this up
-			try {
-				int port = Integer.parseInt(sport);
-        	        	DatagramSocket socket = new DatagramSocket();
-	        	        byte[] data;
-				//send udp to handle pi
-				if(speeding ) {
-					data = "slowRider:1".getBytes();
-				} else {
-					data = "slowRider:0".getBytes();
-				}
-				socket.send(new DatagramPacket(data, data.length, host, port));
-			} catch (Exception e) {
-				System.out.println("Error alerting rider");
-			}
-		}
+		//else {
+		//	int sport = 11111;
+		//	InetAddress host = new InetAddress("10.0.0.12"); //I made this up
+		//	try {
+		//		int port = Integer.parseInt(sport);
+        	  //      	DatagramSocket socket = new DatagramSocket();
+	        	//        byte[] data;
+			//	//send udp to handle pi
+			//	if(speeding ) {
+			//		data = "slowRider:1".getBytes();
+			//	} else {
+			//		data = "slowRider:0".getBytes();
+			//	}
+			//	socket.send(new DatagramPacket(data, data.length, host, port));
+			//} catch (Exception e) {
+			//	System.out.println("Error alerting rider");
+			//}
+//		}
 	}
 
 	public void startReceiving() throws Exception {
