@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import java.util.*;
 import android.view.*;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StateActivity extends AppCompatActivity {
     private boolean debug = false;
@@ -13,19 +14,14 @@ public class StateActivity extends AppCompatActivity {
     RequestStateInterface rs;
 
     private void updateInfo(){
-        //Thread udpSendThread = new Thread(new Runnable() {
-        runOnUiThread(new Runnable() {
-        @Override
-            public void run() {
-                HashMap<String, String> state = rs.getState();
-                for (String key : state.keySet()) {
-                    if (key == "Speed")
-                        textView.setText("Speed: " + Integer.parseInt(state.get(key)));
-                }
-                System.out.println(rs);
-            }
-        });
+        Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+        HashMap<String, String> state = rs.getState();
+        for (String key : state.keySet()) {
+            if (key == "Speed")
+                textView.setText("Speed: " + Integer.parseInt(state.get(key)));
+        }
     }
+
 
 
     public void refresh (View view) {

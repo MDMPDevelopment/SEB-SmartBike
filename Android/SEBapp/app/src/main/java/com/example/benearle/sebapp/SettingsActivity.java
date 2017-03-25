@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -22,10 +23,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void sendMaxSpeed(View view){
+        Toast.makeText(this, "Setting max speed...", Toast.LENGTH_SHORT).show();
         send(("setMaxSpeed:" + maxSpeed.getText().toString()).getBytes());
     }
 
     public void sendRadius (View view){
+        Toast.makeText(this, "Setting radius...", Toast.LENGTH_SHORT).show();
         send(("setRadius:" + radius.getText().toString()).getBytes());
     }
 

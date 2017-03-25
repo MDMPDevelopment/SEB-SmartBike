@@ -9,7 +9,7 @@ import java.net.*;
 
 public class MainActivity extends AppCompatActivity {
     public final static String ip = "192.168.0.31";
-
+    public final static int port = 13375;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

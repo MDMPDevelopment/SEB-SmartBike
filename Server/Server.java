@@ -10,7 +10,7 @@ public class Server {
 	private DatagramSocket socket;
 	private String serverIP;
 	private int serverPort;
-	private int maxSpeed;
+	private double maxSpeed;
 	private boolean speeding;
 
 	public Server() throws Exception {
@@ -53,11 +53,11 @@ public class Server {
 				case "GPS"	:		DbM.addMeasurement(pairs[0], pairs[1]);
 									DbM.setSystemState(pairs[0], pairs[1]);
 								break;
-				case "setRadius":	int rad = Integer.parseInt(pairs[1]);
+				case "setRadius":	double rad = Double.parseInt(pairs[1]);
 									System.out.println("rad: " + rad);
 									//assert(rad!=null);	
 									//DbM.setRad()
-				case "setMaxSpeed": maxSpeed = Integer.parseInt(pairs[1]);
+				case "setMaxSpeed": maxSpeed = Double.parseInt(pairs[1]);
 								break;
 				case "newRide": 	DbM.newRide();
 								break;

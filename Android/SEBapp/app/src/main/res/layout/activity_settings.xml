@@ -25,10 +25,10 @@
             android:id="@+id/maxSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
             android:layout_above="@+id/button9"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:ems="10"
+            android:inputType="number|numberDecimal" />
 
         <Button
             android:id="@+id/button9"
@@ -44,9 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/button9"
-            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/button9"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number|numberDecimal" />
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
