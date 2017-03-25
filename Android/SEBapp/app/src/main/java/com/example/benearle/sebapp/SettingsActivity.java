@@ -10,12 +10,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class SettingsActivity extends AppCompatActivity {
-    private final String serverIP = MainActivity.ip;
-    private final int port =  13375;
     private TextView maxSpeed;
     private TextView radius;
-    private DatagramSocket socket;
-    private InetAddress host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +19,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         maxSpeed = (TextView) findViewById(R.id.maxSpeed);
         radius = (TextView) findViewById(R.id.radius);
-        netInit();
     }
 
     public void sendMaxSpeed(View view){
@@ -34,23 +29,11 @@ public class SettingsActivity extends AppCompatActivity {
         send(("setRadius:" + radius.getText().toString()).getBytes());
     }
 
-    //Network Initialization
-    private void netInit(){
-        try {
-            socket = new DatagramSocket();
-            host = InetAddress.getByName(serverIP);
-
-
-
-        } catch (Exception e) {
-            System.out.println("Error in netInit().");
-            System.out.println(e.getStackTrace());
-        }
-    }
 
     private void send(byte[] data){
         try {
-            socket.send(new DatagramPacket(data, data.length, host, port));
+            Thread myThread = new Thread(new UDPSend(data));
+            myThread.start();
         } catch (Exception e ){
             System.out.println("Error in send().");
             System.out.println(e.getStackTrace());
