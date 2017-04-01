@@ -12,7 +12,6 @@ public class Server {
 	private int serverPort;
 	private double maxSpeed;
 	private boolean speeding;
-
 	public Server() {
 		this(13375);
 	}
@@ -51,7 +50,11 @@ public class Server {
 	public int getServerPort(){
 		return serverPort;
 	}
-
+	//Whenever a packet is received this method is called with the packet.
+	//It will get the plain text string and split it bassed on the ':' char
+	//The first string will be the measurement type or the request
+	//The second string will be the value / port to respond too.
+	//The case statement will handle each requests
 	private void packetReceived(DatagramPacket packet) {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
@@ -96,6 +99,7 @@ public class Server {
 	//after we take the bike apart. 
 	public void alertRider(){
 		if(debug) System.out.println("TOO FAST!");
+		//The method does something like this:
 		//else {
 		//	int sport = 11111;
 		//	InetAddress host = new InetAddress("10.0.0.12"); //I made this up
@@ -115,11 +119,19 @@ public class Server {
 			//}
 //		}
 	}
-
+	//stop running, breaks out of the loop without closing connections
+	public void stopReceiving(){
+		running = false;
+	}
+	//While running receive udp packets and send them to the packet handler
+	//If I had more time / was able to focus more on this code I would have 
+	//Implemented runable and had the udp receiver in a seperate thread
+	//Due to time restraints / android app programing I wasn't able to get to that
+	//"Focus on functionality first Ben." they always said. :) 
 	public void startReceiving(){
 		running = true;
 		//System.out.println("Starting to receive");
-		while(true){
+		while(running){
 			try {
 				DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
 				socket.receive(packet);
@@ -152,15 +164,15 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
-	
 	public void setPort(int newPort) throws Exception {
 		this.serverPort = newPort;
 	}
-
+	//close sockets and turn off running
 	public void exit() {
 		try{
 			this.socket.disconnect();
 			this.socket.close();
+			running = false;
 		} catch (Exception e){
 			System.out.println("Error closing sockets...");
 			e.printStackTrace();
