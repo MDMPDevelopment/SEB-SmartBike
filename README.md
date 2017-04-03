@@ -10,9 +10,29 @@ Contributors:
 
 Another branch exists to show the changes made to our code after the test review it is called 'Implemented-CodeReview-Recomendations'. The reason we have done this is that all of our pi's are currently mounted on the bike and have changes on them that have not yet been pushed to master. Once we unmount the Pi's from the bike we will push the changes we made after our integration testing. 
 
-Description of folders:
+In order to start the project:
+    
+ Launch the Server:  
+   
+    pi@ServerPi:/SEB-SmartBike/Server>java -cp ".:sqlite-jdbc-3.16.1.jar" Server
+    
+    pi@ServerPi:/SEB-SmartBike/Server>python3 signalHandler.py
+    
+    OR
+    
+    pi@ServerPi:/SEB-SmartBike/Server>./launchServer.sh
+    
+ Launch the button handlers:
+ speedingLight.py
+ speedHandler.py
+ brakeHandler.py
+ buttonHandler.py
+ 
+    pi@HandleBarPi:/SEB-SmartBike/HandleBar>
 
-Android/SEBapp: Contains the source code for our andriod app. The android app sends and receives UDP packets to the Server to start new rides, set the wheel radius, set the maximum speed, and get the current values of the system state table. 
+Description of files:
+
+Android/SEBapp: Contains the source code for our android app. The android app sends and receives UDP packets to the Server to start new rides, set the wheel radius, set the maximum speed, and get the current values of the system state table.  
 
 
    -Manifest files can be found in SEB-SmartBike/Android/SEBapp/app/src/main/
