@@ -44,5 +44,6 @@ HandleBar: Conatians all of the python scripts that are run on the handle bar pi
   -buttonHandler, this script waits for a button to be pressed adn then sends the apropriate packet to the server. This will update the system state and start the turning lights
   -speedHandler.py, this script takes a bit stream from either speedSensor or speedStub, calculates the speed then sends it to the server
   -speedSensor.py, this object records the input on the GPIO pin used for the speed magnet and outputs it to speedHandler.
-  -speedingLight.py, 
+  -speedingLight.py, this script waits to get a UDP packet stating that the rider exceeding the maximum speed that they set.
+
 
