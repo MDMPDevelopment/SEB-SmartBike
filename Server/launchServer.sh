@@ -1,6 +1,6 @@
 #!/bin/bash
 
-serverIP="10.0.0.18"
+serverIP="10.0.0.13"
 handleIP="10.0.0.11"
 helmetIP="10.0.0.14"
 port=13375
@@ -50,6 +50,7 @@ echo
 echo "Starting the server..."
 echo 
 
-javac ./*.java
+#javac ./*.java
 #java -ea TestServer
-java -cp ".:sqlite-jdbc-3.16.1.jar" Server
+java -cp ".:sqlite-jdbc-3.16.1.jar" Server &
+python3 signalHandler.py &
