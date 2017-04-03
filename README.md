@@ -42,29 +42,29 @@ Android/SEBapp: Contains the source code for our andriod app. The android app se
 GUI: Contians the source code for our Java GUI, much like the app it displays the current values of the system state table.
 
   
-  -See above description of the set of RequestState classes.
+   -See above description of the set of RequestState classes.
   
-  -SebGui.java, this class contains the view and the contorler for our GUI.
+   -SebGui.java, this class contains the view and the contorler for our GUI.
   
-  -SebModel.java, this is the class that handles the model for our GUI, it has the button handlers.
+   -SebModel.java, this is the class that handles the model for our GUI, it has the button handlers.
   
-  -bike.png, is the beautiful bike clip art used by the GUI.
+   -bike.png, is the beautiful bike clip art used by the GUI.
   
   
     
 HandleBar: Conatians all of the python scripts that are run on the handle bar pi, some of these scripts were only used to test our hardware and will not be described here.
   
-  -brakeHandler, this script takes a bit stream from either brakeSensor or brakeStub, processes it and then sends a UDP packet to the server. It will send a packet whenever the rider pulls the break or releases it.
+   -brakeHandler, this script takes a bit stream from either brakeSensor or brakeStub, processes it and then sends a UDP packet to the server. It will send a packet whenever the rider pulls the break or releases it.
   
-  -brakeSensor, this object records the input on the GPIO pin used for the brake magnet and outputs it to brakeHandler.
+   -brakeSensor, this object records the input on the GPIO pin used for the brake magnet and outputs it to brakeHandler.
   
-  -buttonHandler, this script waits for a button to be pressed adn then sends the apropriate packet to the server. This will update the system state and start the turning lights
+   -buttonHandler, this script waits for a button to be pressed adn then sends the apropriate packet to the server. This will update the system state and start the turning lights
   
-  -speedHandler.py, this script takes a bit stream from either speedSensor or speedStub, calculates the speed then sends it to the server
+   -speedHandler.py, this script takes a bit stream from either speedSensor or speedStub, calculates the speed then sends it to the server
   
-  -speedSensor.py, this object records the input on the GPIO pin used for the speed magnet and outputs it to speedHandler.
+   -speedSensor.py, this object records the input on the GPIO pin used for the speed magnet and outputs it to speedHandler.
   
-  -speedingLight.py, this script waits to get a UDP packet stating that the rider exceeding the maximum speed that they set.
+   -speedingLight.py, this script waits to get a UDP packet stating that the rider exceeding the maximum speed that they set.
 
 
 
@@ -86,23 +86,23 @@ Server: This folder contains the server and all the other scripts that need to b
 The first four will make changes to our system state table, new ride will start a new ride and get state will send the state in a UDP packet to the address it received from and the port in the request. 
 
   
-  -DatabaseManager.java, this class handles all of our database comunications. It is mostly used for holding the current state of the system and loggign all the speed entries. If we had time to add more biometric sensors we would also log them here.
+   -DatabaseManager.java, this class handles all of our database comunications. It is mostly used for holding the current state of the system and loggign all the speed entries. If we had time to add more biometric sensors we would also log them here.
   
-  -DatabaseManagerInterface.java, this interface was used for our mock class, TestServer.
+   -DatabaseManagerInterface.java, this interface was used for our mock class, TestServer.
   
-  -DatabaseManagerTest.java, this is our JUnit test for the DatabaseManager class, it uses the sebTEST.db file with preset known values.
+   -DatabaseManagerTest.java, this is our JUnit test for the DatabaseManager class, it uses the sebTEST.db file with preset known values.
   
-  -README.md contains information on compiling and running our server.
+   -README.md contains information on compiling and running our server.
   
-  -Server.java, see the explination above. This is the class that sends and receceives the UDP packets.
+   -Server.java, see the explination above. This is the class that sends and receceives the UDP packets.
   
-  -TestServer.jaca, this is the previously menitoned mock. It passes itself to the server in the place of DatabaseManager and sends UDP packets to the server and monitor it's method calls.
+   -TestServer.jaca, this is the previously menitoned mock. It passes itself to the server in the place of DatabaseManager and sends UDP packets to the server and monitor it's method calls.
   
-  -launchServer.sh is a bash script that we were going to use to start the server. The plan for it was to take all the info requried for starting the server as parameters. We didn't add this support to the java classes yet and for this reason it does not currently work.
+   -launchServer.sh is a bash script that we were going to use to start the server. The plan for it was to take all the info requried for starting the server as parameters. We didn't add this support to the java classes yet and for this reason it does not currently work.
   
-  -make.sh this script just compiles all the java code in this folder with the apropriate class path, I got tired of typing it out so I thought this  could save some time.
+   -make.sh this script just compiles all the java code in this folder with the apropriate class path, I got tired of typing it out so I thought this  could save some time.
   
-  -seb.db, this is a SQLite3 database, this is a flat file that contains all the tables, coloumns and rows from our db. It's pretty slick!
+   -seb.db, this is a SQLite3 database, this is a flat file that contains all the tables, coloumns and rows from our db. It's pretty slick!
   
-  -signalHandler.py, this is the python script that runs the lights a the back of the bike. It doesn't use the RequestState java class, since it is on the same pi as the database we just use SQLlite python libraries to querry the system state table without the server being involved.
+   -signalHandler.py, this is the python script that runs the lights a the back of the bike. It doesn't use the RequestState java class, since it is on the same pi as the database we just use SQLlite python libraries to querry the system state table without the server being involved.
 
