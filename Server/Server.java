@@ -24,8 +24,7 @@ public class Server {
 	public Server(String serverIP, int serverPort){
 		this(serverIP, serverPort, new DatabaseManager());
 	}
-
-<<<<<<< HEAD
+	
 	public Server(String serverIP, int serverPort, DatabaseManagerInterface DbM) throws Exception {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
@@ -34,7 +33,8 @@ public class Server {
 		speeding = false;
 		maxSpeed = 9;
 		socket = new DatagramSocket(serverPort);
-=======
+	}
+	
 	public Server(String serverIP, int serverPort, DatabaseManagerInterface DbM){
 		try {
 			this.serverIP = serverIP;
@@ -49,7 +49,6 @@ public class Server {
 			e.printStackTrace();
 			System.exit(0); //nothing can be done...
 		}
->>>>>>> 16689c5beb024cc7c92863da07f3da926dbb634d
 	}
 
 
@@ -62,7 +61,12 @@ public class Server {
 	public int getServerPort(){
 		return serverPort;
 	}
-
+	
+	//Whenever a packet is received this method is called with the packet.
+	//It will get the plain text string and split it bassed on the ':' char
+	//The first string will be the measurement type or the request
+	//The second string will be the value / port to respond too.
+	//The case statement will handle each requests
 	private void packetReceived(DatagramPacket packet) {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
@@ -102,12 +106,9 @@ public class Server {
 				default:			System.out.println("Unknown request: " + s);
 								break;
 			}
-			//System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 		}
 	}
 	//This will be used to alert the rider if they are going too fast
-	//This code is writen and mounted on our bike, we will push it
-	//after we take the bike apart. 
 	public void alertRider(){
 		if(debug) System.out.println("TOO FAST!");
 		else {
@@ -117,7 +118,7 @@ public class Server {
 				int port = 13375;
         	        	DatagramSocket socket = new DatagramSocket();
 	        	        byte[] data;
-				//send udp to handle pi
+				//send udp to handle pi it will set the light to the number in the packet
 				if(speeding ) {
 					data = "1".getBytes();
 				} else {
@@ -130,10 +131,13 @@ public class Server {
 			}
 		}
 	}
-
+	//While running receive udp packets and send them to the packet handler
+	//If I had more time / was able to focus more on this code I would have 
+	//Implemented runable and had the udp receiver in a seperate thread
+	//Due to time restraints / android app programing I wasn't able to get to that
+	//"Focus on functionality first Ben." they always said. :)
 	public void startReceiving(){
 		running = true;
-		//System.out.println("Starting to receive");
 		while(true){
 			try {
 				DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
@@ -141,10 +145,15 @@ public class Server {
 				this.packetReceived(packet);
 			} catch (Exception e) {
 				e.printStackTrace();
-				//this error isn't critical, continue 
 			}
 		}
 	}
+	
+	//stop running, breaks out of the loop without closing connections
+	public void stopReceiving(){
+		running = false;
+	}
+	
 	
 	//Sends a copy of the system state to the ip + port that requested it
 	//It will be sent in the following format:
@@ -172,6 +181,7 @@ public class Server {
 		this.serverPort = newPort;
 	}
 
+	//close sockets and turn off running
 	public void exit() {
 		try{
 			this.socket.disconnect();
