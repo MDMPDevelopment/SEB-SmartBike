@@ -1,11 +1,13 @@
 import socket, sys, time
 import RPi.GPIO as GPIO
 
-textport = sys.argv[1]
+#UDP setup
+host = sys.argv[1]
+textport = sys.argv[2]
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = int(textport)
-server_address = ('10.0.0.13', port)
+server_address = (host, port)
 s.bind(server_address)
 
 GPIO.setmode(GPIO.BOARD)
