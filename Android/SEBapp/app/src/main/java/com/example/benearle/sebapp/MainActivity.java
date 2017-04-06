@@ -5,10 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.*;
 import android.view.*;
-import java.net.*;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String ip = "192.168.0.31";
+    public final static String ip = "10.0.0.13";
     public final static int port = 13375;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

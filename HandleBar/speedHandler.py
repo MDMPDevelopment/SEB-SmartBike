@@ -1,16 +1,8 @@
 import RPi.GPIO as GPIO
 import socket, sys, time
-import speedSensor
-import speedStub
-
-#Allows program to be run with either the sensor or the stub.  Conditional lets program
-#run without the testing argument.  Defaults to sensor if testing argument not set.
-test = False
-
-if len(sys.argv) > 3:
-	test = (sys.argv[3][0] == 't' or sys.argv[3][0] == 'T')
-
-speed_sensor = speedStub() if test else speedSensor()
+#GPIO setup
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(21, GPIO.IN) #speed
 
 #UDP setup
 host = sys.argv[1]
@@ -23,16 +15,16 @@ server_address = (host, port)
 radius = 0.29 #radius of bike wheel
 pi = 3.14159 
 count = 0
-rotations = 5 #number of rotations
+rotations = 15 #number of rotations
 wait = 0.1 #wait used for debouncing
 start = time.time() #timer
 
 while 1:  
-  if not speed_sensor.sensorVal():
+  if not GPIO.input(21):
     time.sleep(wait) # wait so only one reading occurs
     if count == rotations: #enter if max rotation
       t = time.time() - start - wait #time for 5 rotations
-      speed = (2*pi*radius*rotations)/t #speed calc
+      speed = (2*pi*radius*rotations*3.6)/t #speed calc
       #send packet
       data = "Speed:%f" %speed
       s.sendto(data.encode('utf-8'), server_address)
@@ -41,8 +33,5 @@ while 1:
       count = 0
     else:
       count = count + 1
-  #reset if bike has stopped for 10 secs
-  #if time.time() - start > 10:
-    #start = time.time()
-    #count = 0 
 s.shutdown(1)
+      

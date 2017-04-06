@@ -49,6 +49,15 @@
             android:inputType="textPersonName"
             android:text="Speed:" />
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:text="System State: "
+            android:layout_below="@+id/speedView"
+            android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

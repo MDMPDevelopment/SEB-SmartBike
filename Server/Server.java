@@ -13,18 +13,19 @@ public class Server {
 	private double maxSpeed;
 	private boolean speeding;
 
-	public Server() throws Exception {
+	public Server() {
 		this(13375);
 	}
 
-	public Server(int port) throws Exception {
+	public Server(int port) {
 		this("192.168.145.130", port);
 	}
 
-	public Server(String serverIP, int serverPort) throws Exception {
+	public Server(String serverIP, int serverPort){
 		this(serverIP, serverPort, new DatabaseManager());
 	}
 
+<<<<<<< HEAD
 	public Server(String serverIP, int serverPort, DatabaseManagerInterface DbM) throws Exception {
 		this.serverIP = serverIP;
 		this.serverPort = serverPort;
@@ -33,7 +34,24 @@ public class Server {
 		speeding = false;
 		maxSpeed = 9;
 		socket = new DatagramSocket(serverPort);
+=======
+	public Server(String serverIP, int serverPort, DatabaseManagerInterface DbM){
+		try {
+			this.serverIP = serverIP;
+			this.serverPort = serverPort;
+			this.DbM = DbM;
+			this.running = false;
+			speeding = false;
+			maxSpeed = 999;
+			socket = new DatagramSocket(serverPort);
+		} catch (Exception e){
+			System.out.println("Error in the Server constructor...");
+			e.printStackTrace();
+			System.exit(0); //nothing can be done...
+		}
+>>>>>>> 16689c5beb024cc7c92863da07f3da926dbb634d
 	}
+
 
 	public boolean getRunning() {
 		return running;
@@ -45,7 +63,7 @@ public class Server {
 		return serverPort;
 	}
 
-	private void packetReceived(DatagramPacket packet) throws Exception {
+	private void packetReceived(DatagramPacket packet) {
 		String s = new String(packet.getData()).trim();
 		String[] pairs = s.split(":");
 		if(pairs.length == 2 ){
@@ -87,7 +105,9 @@ public class Server {
 			//System.out.println("Type: " + pairs[0] + "\nValue: " + pairs[1]);
 		}
 	}
-
+	//This will be used to alert the rider if they are going too fast
+	//This code is writen and mounted on our bike, we will push it
+	//after we take the bike apart. 
 	public void alertRider(){
 		if(debug) System.out.println("TOO FAST!");
 		else {
@@ -111,49 +131,59 @@ public class Server {
 		}
 	}
 
-	public void startReceiving() throws Exception {
+	public void startReceiving(){
 		running = true;
 		//System.out.println("Starting to receive");
 		while(true){
-			DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
-			socket.receive(packet);
-			this.packetReceived(packet);
+			try {
+				DatagramPacket packet = new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE );
+				socket.receive(packet);
+				this.packetReceived(packet);
+			} catch (Exception e) {
+				e.printStackTrace();
+				//this error isn't critical, continue 
+			}
 		}
 	}
 	
 	//Sends a copy of the system state to the ip + port that requested it
 	//It will be sent in the following format:
 	//"Speed:10 turnL:1 turnR:0 brake:1 "
-	private void sendState(InetAddress host, String sport) throws Exception{
-		//InetAddress host = InetAddress.getByName(ip);
-		int port = Integer.parseInt(sport);
-		DatagramSocket socket = new DatagramSocket();
-		byte[] data;
-		String s = "";
-		//Iterate through the keys in the hash table building the message
-		HashMap<String, String> state = DbM.getSystemState();
-		for (String key : state.keySet()){
-			s += key + ':' +state.get(key) + ' ';
+	private void sendState(InetAddress host, String sport){
+		try {
+			int port = Integer.parseInt(sport);
+			DatagramSocket socket = new DatagramSocket();
+			byte[] data;
+			String s = "";
+			//Iterate through the keys in the hash table building the message
+			HashMap<String, String> state = DbM.getSystemState();
+			for (String key : state.keySet()){
+				s += key + ':' +state.get(key) + ' ';
+			}
+			data = s.getBytes();
+	        socket.send(new DatagramPacket(data, data.length, host, port));
+		} catch (Exception e){
+			System.out.println("Failed to send System state...");
+			e.printStackTrace();
 		}
-		data = s.getBytes();
-        socket.send(new DatagramPacket(data, data.length, host, port));
 	}
 	
 	public void setPort(int newPort) throws Exception {
 		this.serverPort = newPort;
 	}
 
-	public void exit() throws Exception {
-		this.socket.disconnect();
-		this.socket.close();
+	public void exit() {
+		try{
+			this.socket.disconnect();
+			this.socket.close();
+		} catch (Exception e){
+			System.out.println("Error closing sockets...");
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String [] args){
-		try {
-			Server s = new Server();
-			s.startReceiving();
-		} catch (Exception e){
-			System.out.println(e);
-		}
+		Server s = new Server();
+		s.startReceiving();
 	}
 }
