@@ -29,6 +29,11 @@ In order to start the project:
     pi@HandleBarPi:/SEB-SmartBike/HandleBar>python3 brakeHandler.py serverIP port
     
     pi@HandleBarPi:/SEB-SmartBike/HandleBar>python3 buttonHandler.py serverIP port
+    
+    OR
+    
+    pi@HandBarPi:/SEB-SmartBike/HandleBar>./launchHandlebar.sh
+
 
  Helmet pi will connect to the phone on start up. Ensure the phone is on and ready to connect before booting and it should work seamlessly. 
 
