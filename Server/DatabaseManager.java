@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.sql.SQLException;
+import java.io.*;
 
 
 public class DatabaseManager implements DatabaseManagerInterface{
@@ -17,7 +18,6 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 	public static final String DEFAULT_DATABASE = "seb.db";
 
-
 	public DatabaseManager(String dbName) {
 
 		DatabaseName = dbName;
@@ -26,7 +26,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
         		Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Could not find SQLite driver.");
-			e.printStackTrace();
+			logException(e);
 		}
 
 		try {
@@ -34,12 +34,27 @@ public class DatabaseManager implements DatabaseManagerInterface{
         		statement = connection.createStatement();
 		} catch (SQLException e) {
 			System.out.println("Unable to create database connection.");
-			e.printStackTrace();
+			logException(e);
 		}
+
 	}
 
 	public DatabaseManager() {
 		this(DEFAULT_DATABASE);
+	}
+
+	private void logException(Exception e) {
+		try {
+			FileWriter fileWriter = new FileWriter("log.txt", true);
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			PrintWriter printWriter = new PrintWriter(bufferedWriter, true);
+			e.printStackTrace(printWriter);
+			fileWriter.close();
+			bufferedWriter.close();
+			printWriter.close();
+		} catch (IOException ioe) {
+			throw new RuntimeException("Could not log exception", ioe);
+		}
 	}
 
 	public void addMeasurement(String type, String data) {
@@ -65,7 +80,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 		} catch (SQLException e) {
 			System.out.println("Failed to add measurement.");
-			e.printStackTrace();
+			logException(e);
 		}
 	}
 
@@ -84,47 +99,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 	               // + resultSet.getString("TimeStamp") + "\n";
 		} catch (SQLException e) {
 			System.out.println("Could not get measurement entities.");
-			e.printStackTrace();
-		}
-		return query;
-	}
-
-	private String getMeasurmentEntities(String type) {
-		String query ="EntityId|MeasurementId  |\tValue \t|\tTime\n";
-
-		try {
-			//Query the MeasurementEntities table
-			resultSet = statement.executeQuery("SELECT * FROM MeasurementEntities INNER JOIN Measurements ON MeasurementEntities.MeasurementId = Measurements.MeasurementId WHERE MeasurementType == \"" + type + "\"");
-			//Build the string
-	        while (resultSet.next())
-	        	query += resultSet.getString("EntityId") + "\t|\t"
-	                + resultSet.getString("MeasurementId") + "\t|\t"
-	                + resultSet.getString("Value") + "\t|\t"
-	                + resultSet.getString("TimeStamp") + "\n";
-		} catch (SQLException e) {
-			System.out.println("Could not get measurement entities.");
-			e.printStackTrace();
-		}
-		return query;
-	}
-
-
-	private String getMeasurmentTypes() {
-		String query ="ID \t|\tType \t|\tUnits \n";
-		//Query the Measurements table
-
-		try {
-			resultSet = statement.executeQuery("SELECT * FROM Measurements");
-	        //Build the string
-	        while (resultSet.next())
-	        	query += resultSet.getString("MeasurementId") + "\t|\t"
-	                + resultSet.getString("MeasurementType") + "\t|\t"
-	                + resultSet.getString("MeasurementUnits") + "\t|\t"
-	                + resultSet.getString("UpdateDate") + "\n";
-
-		} catch (SQLException e) {
-			System.out.println("Could not get measurement types.");
-			e.printStackTrace();
+			logException(e);
 		}
 		return query;
 	}
@@ -144,7 +119,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 		} catch (SQLException e) {
 			System.out.println("Could not get system state.");
-			e.printStackTrace();
+			logException(e);
 		}
 		return state;
 	}
@@ -163,7 +138,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 			prpstat.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Could not update system state.");
-			e.printStackTrace();
+			logException(e);
 		}
 
 	}
@@ -186,7 +161,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 	               // + resultSet.getString("TimeStamp") + "\n";
 		} catch (SQLException e) {
 			System.out.println("Could not get history.");
-			e.printStackTrace();
+			logException(e);
 		}
 		return query;
 	}
@@ -237,7 +212,7 @@ public class DatabaseManager implements DatabaseManagerInterface{
 
 		} catch (SQLException e) {
 			System.out.println("Could not get measurement entities.");
-			e.printStackTrace();
+			logException(e);
 		}
 	}
 
@@ -249,50 +224,8 @@ public class DatabaseManager implements DatabaseManagerInterface{
 			connection.close();
 		} catch (SQLException e) {
 			System.out.println("Could not update system state.");
-			e.printStackTrace();
+			logException(e);
 		}
 	}
 
-
-	public static void main(String[] args) {
-		try {
-			DatabaseManager db = new DatabaseManager();
-			//System.out.println("Listing measurment types:");
-			//System.out.println(db.getMeasurmentTypes());
-			//System.out.println("Listing measurment entities:");
-			//System.out.println(db.getMeasurmentEntities());
-			//System.out.println("Adding GPS reading...");
-			//db.addMeasurement("Speed", "10");
-			//ystem.out.println("Listing measurment entities of type 'Speed':");
-			//System.out.println(db.getMeasurmentEntities("Speed"));
-
-			HashMap<String, String> state;
-
-			db.setSystemState("turnL", "0");
-
-			System.out.println("--- SYSTEM STATE---");
-			state = db.getSystemState();
-			for (String key: state.keySet()) {
-				System.out.println(key + " : " + state.get(key));
-			}
-
-
-			db.setSystemState("turnL", "1");
-
-
-			System.out.println("--- SYSTEM STATE---");
-			state = db.getSystemState();
-			for (String key: state.keySet()) {
-				System.out.println(key + " : " + state.get(key));
-			}
-
-
-
-
-
-			db.exit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
